@@ -1,0 +1,5 @@
+Backend/node_modules/
+Backend/coverage/
+Backend/.idea/
+Backend/src/log.txt
+Backend/log.txt
