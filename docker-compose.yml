@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./Backend
+    command: yarn start
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/usr/app
+    depends_on:
+      - db
+  db:
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: 123
+      MARIADB_DATABASE: tcc
+      MARIADB_USER: void
+      MARIADB_PASSWORD: 123
+    volumes:
+      - data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  data:
+
+networks:
+  default:
