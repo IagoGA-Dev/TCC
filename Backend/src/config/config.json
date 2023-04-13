@@ -3,7 +3,7 @@
     "username": "root",
     "password": "123",
     "database": "tcc",
-    "host": "localhost",
+    "host": "127.0.0.1",
     "dialect": "mariadb",
     "pool": {
       "max": 5,
