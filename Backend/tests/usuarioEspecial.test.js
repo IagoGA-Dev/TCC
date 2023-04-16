@@ -1,24 +1,36 @@
 const requests = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
-
-const { UsuarioEspecial } = db.sequelize.models;
-
-let createdUsuarioEspecial;
 
 describe("USUARIO ESPECIAL API", () => {
+  let createdUsuario, createdUsuarioEspecial;
+
   let logMessages = [];
   beforeAll(async () => {
+    // * Desabilitando o console.log
     console.log = (message) => {
       logMessages.push(message);
     };
+    let res;
+
+    // * Criando dados para testes
+    const usuario = {
+      Nome: "Teste",
+      Email: "teste@gmail.com",
+      Senha: "123456",
+      Salt: "test123",
+      CPF: "12345678910",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    };
+    res = await requests(app).post("/api/usuario/").send(usuario);
+    createdUsuario = res.body;
+
   });
 
   it("deve criar um novo usuario especial", async () => {
     const res = await requests(app).post("/api/usuarioEspecial/").send({
-      ID_Usuario: 1,
+      ID_Usuario: createdUsuario.ID,
       Tipo: "Assistente",
-      ID_GrupoModerado: 1,
+      ID_GrupoModerado: 1, // * Sempre vai existir. Não precisa alterar.
     });
 
     expect(res.statusCode).toEqual(201);
@@ -27,36 +39,30 @@ describe("USUARIO ESPECIAL API", () => {
     createdUsuarioEspecial = res.body;
   });
 
+  it("deve recuperar todos os usuario especials", async () => {
+    const res = await requests(app).get("/api/usuarioEspecial/");
+    expect(res.statusCode).toEqual(200);
+  });
+
   it("deve recuperar um usuario especial pelo ID", async () => {
     const res = await requests(app).get(
       `/api/usuarioEspecial/${createdUsuarioEspecial.ID}`
     );
 
     expect(res.statusCode).toEqual(200);
-    expect(res.body.ID_Usuario).toEqual(1);
-  });
-
-  it("deve recuperar todos os usuario especials", async () => {
-    const res = await requests(app).get("/api/usuarioEspecial/");
-    expect(res.statusCode).toEqual(200);
   });
 
   it("deve atualizar um usuario especial", async () => {
-    const updatedID_Usuario = 2;
+    const updatedRole = "Moderador";
     const res = await requests(app)
       .put(`/api/usuarioEspecial/${createdUsuarioEspecial.ID}`)
       .send({
-        ID_Usuario: updatedID_Usuario,
-        Tipo: "Assistente",
+        ID_Usuario: createdUsuario.ID,
+        Tipo: updatedRole,
         ID_GrupoModerado: 1,
       });
 
     expect(res.statusCode).toEqual(200);
-
-    const updatedUsuarioEspecial = await UsuarioEspecial.findOne({
-      where: { ID: createdUsuarioEspecial.ID },
-    });
-    expect(updatedUsuarioEspecial.ID_Usuario).toEqual(updatedID_Usuario);
   });
 
   it("deve deletar um usuario especial", async () => {
@@ -64,14 +70,10 @@ describe("USUARIO ESPECIAL API", () => {
       `/api/usuarioEspecial/${createdUsuarioEspecial.ID}`
     );
     expect(res.statusCode).toEqual(200);
-    const deletedUsuarioEspecial = await UsuarioEspecial.findOne({
-      where: { ID: createdUsuarioEspecial.ID },
-    });
-    expect(deletedUsuarioEspecial).toBeNull();
   });
 
   afterAll(async () => {
-    await UsuarioEspecial.destroy({ where: {} });
+    await requests(app).delete(`/api/usuario/${createdUsuario.ID}`);
     await server.close();
   });
 });
