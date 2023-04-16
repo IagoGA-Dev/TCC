@@ -14,17 +14,22 @@ class CrudController {
     });
   }
 
-  // Função temporária para logar erros no arquivo log.txt
+  // ! Temporáriamente desativado
+  // * Função para logar erros no arquivo log.txt
+  // logErrorToFile(error) {
+  //   fs.appendFile(
+  //     "log.txt",
+  //     `${new Date().toISOString()} - ${error}\n`,
+  //     (err) => {
+  //       if (err) {
+  //         console.error("Erro ao registrar no arquivo:", err);
+  //       }
+  //     }
+  //   );
+  // }
+
   logErrorToFile(error) {
-    fs.appendFile(
-      "log.txt",
-      `${new Date().toISOString()} - ${error}\n`,
-      (err) => {
-        if (err) {
-          console.error("Erro ao registrar no arquivo:", err);
-        }
-      }
-    );
+    return;
   }
 
   create(req, res) {
@@ -64,7 +69,7 @@ class CrudController {
           });
         }
 
-        // Cria o objeto no banco de dados
+        // * Cria o objeto no banco de dados
         this.model
           .create(item)
           .then((data) => {
@@ -73,6 +78,17 @@ class CrudController {
           .catch((err) => {
             console.log(err);
             this.logErrorToFile(err.message);
+
+            // TODO: Arrumar função abaixo.
+            // if (err.errors.ValidationErrorItem) {
+            //   const val = err.errors.ValidationErrorItem;
+            //   if (val.type === "unique violation")
+            //     return res.status(400).send({
+            //       code: 2,
+            //       message: "Objeto já existe", // * Acho melhor não providenciar muitas informações, pode ser usado para um ataque.
+            //     });
+            // }
+
             return res.status(500).send({
               code: 3,
               message: "Erro interno no servidor",

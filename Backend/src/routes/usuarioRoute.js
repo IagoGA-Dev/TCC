@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 /**
  *  @swagger
@@ -186,6 +188,23 @@ const CrudController = require("../controllers");
  */
 
 usuario = new CrudController(db.Usuario);
+
+
+// * Função para gerar salt e senha criptografada.
+const generateSaltAndHash = (senha) => {
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(senha, salt);
+    return { salt, hash };
+}
+
+router.use(function(req, res, next) {
+    if (req.body.Senha) {
+        const { salt, hash } = generateSaltAndHash(req.body.Senha);
+        req.body.Senha = hash;
+        req.body.Salt = salt;
+    }
+    next();
+})
 
 router.post("/", usuario.create.bind(usuario));
 router.get("/", usuario.findAll.bind(usuario));

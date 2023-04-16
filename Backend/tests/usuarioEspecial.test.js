@@ -17,7 +17,6 @@ describe("USUARIO ESPECIAL API", () => {
       Nome: "Teste",
       Email: "teste@gmail.com",
       Senha: "123456",
-      Salt: "test123",
       CPF: "12345678910",
       ID_Instituicao: 1, // * Sempre vai existir.
     };
