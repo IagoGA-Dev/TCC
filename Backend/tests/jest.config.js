@@ -5,7 +5,7 @@
 
 // ! Não é o melhor lugar para colocar um TODO, massss...
 // TODO: Verificar openHandles.
-
+// TODO: Adicionar mais casos, usar Banido.test.js como exemplo.
 const { defaults } = require("jest-config");
 
 module.exports = {

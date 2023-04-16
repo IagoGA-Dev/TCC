@@ -2,7 +2,7 @@ const requests = require("supertest");
 const { app, server } = require("../index");
 
 // TODO: Adicionar mais casos de uso
-// * Como se o usuário criado não existir.
+// * Como se o usuário que mandou a mensagem não existir.
 
 describe("MENSAGEM API", () => {
   let createdMensagem;

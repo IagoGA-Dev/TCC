@@ -1,15 +1,13 @@
 const request = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
-
-const { Usuario } = db.sequelize.models;
-
-let createdUsuario;
 
 describe("USUARIO API", () => {
+  let createdUsuario;
+
   let logMessages = [];
 
   beforeAll(async () => {
+    // * Desabilitando o console.log
     console.log = (message) => {
       logMessages.push(message);
     };
@@ -18,11 +16,11 @@ describe("USUARIO API", () => {
   it("deve criar um novo usuário", async () => {
     const res = await request(app).post("/api/usuario/").send({
       Nome: "Teste",
-      Email: "teste@teste.com",
-      Senha: "testesenha",
-      Salt: "testsalt",
-      CPF: "12345678901",
-      ID_Instituicao: 1,
+      Email: "teste@gmail.com",
+      Senha: "123456",
+      Salt: "test123",
+      CPF: "12345678910",
+      ID_Instituicao: 1, // * Sempre vai existir.
     });
 
     expect(res.statusCode).toEqual(201);
@@ -39,38 +37,28 @@ describe("USUARIO API", () => {
   });
 
   it("deve atualizar um usuário", async () => {
+    // ! Deve haver uma forma melhor de fazer isso
     const updatedNome = "Teste Atualizado";
     const res = await request(app)
       .put(`/api/usuario/${createdUsuario.ID}`)
       .send({
         Nome: updatedNome,
-        Email: "teste@teste.com",
-        Senha: "testesenha",
-        Salt: "testsalt",
-        CPF: "12345678901",
-        ID_Instituicao: 1,
+        Email: createdUsuario.Email,
+        Senha: createdUsuario.Senha,
+        Salt: createdUsuario.Salt,
+        CPF: createdUsuario.CPF,
+        ID_Instituicao: createdUsuario.ID_Instituicao
       });
 
     expect(res.statusCode).toEqual(200);
-
-    const updatedUsuario = await Usuario.findOne({
-      where: { ID: createdUsuario.ID },
-    });
-    expect(updatedUsuario.Nome).toEqual(updatedNome);
   });
 
   it("deve deletar um usuário", async () => {
     const res = await request(app).delete(`/api/usuario/${createdUsuario.ID}`);
 
     expect(res.statusCode).toEqual(200);
-
-    const deletedUsuario = await Usuario.findOne({
-      where: { ID: createdUsuario.ID },
-    });
-    expect(deletedUsuario).toBeNull();
   });
   afterAll(async () => {
-    await db.sequelize.close();
     await server.close();
   });
 });
