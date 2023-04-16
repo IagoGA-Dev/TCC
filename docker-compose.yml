@@ -1,3 +1,5 @@
+# TODO: Verificar posteriormente o motivo do docker do backend não conseguir acessar o banco de dados.
+# TODO: Verificar razão do nodemon não funcionar com o docker. ^ pode estar relacionado com o erro acima.
 version: "3.8"
 
 services:
@@ -10,6 +12,7 @@ services:
       - .:/app
     depends_on:
       - db
+  # ? Não sei o motivo do erro. Consigo acessar o banco de dados normalmente pelo terminal e pelo dbeaver.
   db:
     image: mariadb
     environment:

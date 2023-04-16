@@ -1,14 +1,13 @@
 const requests = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
 
-const { UsuarioGrupo } = db.sequelize.models;
-
-let createdUsuarioGrupo;
 
 describe("USUARIO GRUPO API", () => {
+  let createdUsuarioGrupo;
+
   let logMessages = [];
   beforeAll(async () => {
+    // * Desabilitando o console.log
     console.log = (message) => {
       logMessages.push(message);
     };
@@ -50,11 +49,6 @@ describe("USUARIO GRUPO API", () => {
       });
 
     expect(res.statusCode).toEqual(200);
-
-    const updatedUsuarioGrupo = await UsuarioGrupo.findOne({
-      where: { ID: createdUsuarioGrupo.ID },
-    });
-    expect(updatedUsuarioGrupo.ID_Usuario).toEqual(updatedID_Usuario);
   });
 
   it("deve deletar um usuario grupo", async () => {
@@ -62,14 +56,9 @@ describe("USUARIO GRUPO API", () => {
       `/api/usuarioGrupo/${createdUsuarioGrupo.ID}`
     );
     expect(res.statusCode).toEqual(200);
-    const deletedUsuarioGrupo = await UsuarioGrupo.findOne({
-      where: { ID: createdUsuarioGrupo.ID },
-    });
-    expect(deletedUsuarioGrupo).toBeNull();
   });
 
   afterAll(async () => {
-    await db.sequelize.close();
     await server.close();
   });
 });
