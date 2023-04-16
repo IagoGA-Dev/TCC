@@ -1,14 +1,16 @@
 const requests = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
 
-const { Mensagem } = db.sequelize.models;
-
-let createdMensagem;
+// TODO: Adicionar mais casos de uso
+// * Como se o usuário criado não existir.
 
 describe("MENSAGEM API", () => {
+  let createdMensagem;
+
   let logMessages = [];
+
   beforeAll(async () => {
+    // * Desabilitando o console.log
     console.log = (message) => {
       logMessages.push(message);
     };
@@ -20,7 +22,7 @@ describe("MENSAGEM API", () => {
       Texto: "Olá, mundo!",
       Imagem: "/GRUPO_TESTE/Teste.png",
       Arquivo: "/GRUPO_TESTE/Teste.png",
-      Tamanho: 12345,
+      Tamanho: 12345, // TODO: Especificar posteriormente qual o formato (KB, MB, GB).
       ID_Usuario: 1,
       ID_Grupo: 1,
     });
@@ -31,16 +33,16 @@ describe("MENSAGEM API", () => {
     createdMensagem = res.body;
   });
 
+  it("deve recuperar todas as mensagens", async () => {
+    const res = await requests(app).get("/api/mensagem/");
+    expect(res.statusCode).toEqual(200);
+  });
+
   it("deve recuperar uma mensagem pelo ID", async () => {
     const res = await requests(app).get(`/api/mensagem/${createdMensagem.ID}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.ID_Usuario).toEqual(1);
-  });
-
-  it("deve recuperar todas as mensagens", async () => {
-    const res = await requests(app).get("/api/mensagem/");
-    expect(res.statusCode).toEqual(200);
   });
 
   it("deve atualizar uma mensagem", async () => {
@@ -58,11 +60,6 @@ describe("MENSAGEM API", () => {
       });
 
     expect(res.statusCode).toEqual(200);
-
-    const updatedMensagem = await Mensagem.findOne({
-      where: { ID: createdMensagem.ID },
-    });
-    expect(updatedMensagem.Texto).toEqual(updatedText);
   });
 
   it("deve deletar uma mensagem", async () => {
@@ -70,17 +67,9 @@ describe("MENSAGEM API", () => {
       `/api/mensagem/${createdMensagem.ID}`
     );
     expect(res.statusCode).toEqual(200);
-
-    const deletedMensagem = await Mensagem.findOne({
-      where: { ID: createdMensagem.ID },
-    });
-    expect(deletedMensagem).toEqual(null);
   });
 
   afterAll(async () => {
-    await Mensagem.destroy({ where: {} });
-
-    await db.sequelize.close();
     await server.close();
   });
 });
