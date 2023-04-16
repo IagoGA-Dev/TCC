@@ -28,7 +28,18 @@ describe("GRUPO API", () => {
     createdGrupo = res.body;
   });
 
-  it("Deve recuperar todos os grupos", async () => {
+  // * Provavelmente vai funcionar já que o controller é o mesmo.
+  it("não deve criar um grupo que já existe", async () => {
+    const res = await request(app).post("/api/grupo/").send({
+      Nome: "Teste",
+      Categoria: "Teste",
+      Privado: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("deve recuperar todos os grupos", async () => {
     const res = await request(app).get("/api/grupo/");
     expect(res.statusCode).toEqual(200);
   });
@@ -38,6 +49,12 @@ describe("GRUPO API", () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.Nome).toEqual("Teste");
+  });
+
+  it("não deve recuperar um grupo que não existe", async () => {
+    const res = await request(app).get("/api/grupo/-1");
+
+    expect(res.statusCode).toEqual(404);
   });
 
   it("deve atualizar um grupo", async () => {
