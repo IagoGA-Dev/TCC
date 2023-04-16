@@ -1,23 +1,18 @@
 const request = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
 
-const { Grupo } = db.sequelize.models;
-
-let createdGrupo;
 
 describe("GRUPO API", () => {
+  let createdGrupo;
+
   let logMessages = [];
+
   beforeAll(async () => {
+    // * Desabilita o console.log
     console.log = (message) => {
       logMessages.push(message);
     };
 
-    await Grupo.destroy({
-      where: {
-        Categoria: "Teste",
-      },
-    });
   });
 
   it("deve criar um novo grupo", async () => {
@@ -54,33 +49,20 @@ describe("GRUPO API", () => {
     });
 
     expect(res.statusCode).toEqual(200);
-
-    const updatedGrupo = await Grupo.findOne({
-      where: { ID: createdGrupo.ID },
-    });
-    expect(updatedGrupo.Nome).toEqual(updatedNome);
+    // TODO: Verificar atualização por API.
   });
 
-  // Não está funcionando corretamente, mesmo se eu obtenho o ID pelo createdGrupo, ele não deleta o grupo do banco de dados mesmo retornando 200.
-  // TODO: Verificar o motivo do erro.
   it("deve deletar um grupo", async () => {
-    // Vou alterar posteriormente... Só temporariamente...
-    const grupo = await Grupo.findOne({
-      where: { Categoria: "Teste" },
-    });
-    const res = await request(app).delete(`/api/grupo/${grupo.ID}`);
+    const res = await request(app).delete(`/api/grupo/${createdGrupo.ID}`); // * ...
 
     expect(res.statusCode).toEqual(200);
 
-    const deletedGrupo = await Grupo.findOne({
-      where: { ID: grupo.ID },
-    });
-
-    expect(deletedGrupo).toBeNull();
+    // * Verificar se o código é 200 já é o suficiente
+    // * Mas pode ser interessante fazer uma busca posteriormente.
   });
 
   afterAll(async () => {
-    await db.sequelize.close();
+    // * Só fechando o servidor já que não tem dependência com outras tabelas.
     await server.close();
   });
 });

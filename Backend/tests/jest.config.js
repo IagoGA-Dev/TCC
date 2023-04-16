@@ -3,6 +3,9 @@
  *  =========================================
  */
 
+// ! Não é o melhor lugar para colocar um TODO, massss...
+// TODO: Verificar openHandles.
+
 const { defaults } = require("jest-config");
 
 module.exports = {

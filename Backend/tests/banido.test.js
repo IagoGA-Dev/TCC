@@ -1,6 +1,5 @@
 const request = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
 
 describe("BANIDO API", () => {
   let createdGrupo, createdUsuario, createdUsuarioGrupo, createdBanido;
@@ -117,7 +116,6 @@ describe("BANIDO API", () => {
     await request(app).delete(`/api/usuario/${createdUsuario.ID}`);
     await request(app).delete(`/api/grupo/${createdGrupo.ID}`);
 
-    await db.sequelize.close();
     await server.close();
   });
 });
