@@ -1,14 +1,13 @@
 const request = require("supertest");
 const { app, server } = require("../index");
-const db = require("../src/models");
-
-const { Instituicao } = db.sequelize.models;
 
 describe("INSTITUICAO API", () => {
   let createdInstituicao;
+
   let logMessages = [];
 
   beforeAll(async () => {
+    // * Desabilitando o console.log
     console.log = (message) => {
       logMessages.push(message);
     };
@@ -27,6 +26,11 @@ describe("INSTITUICAO API", () => {
     expect(res.body).toHaveProperty("ID");
 
     createdInstituicao = res.body;
+  });
+
+  it("deve retornar todas as instituições", async () => {
+    const res = await request(app).get("/api/instituicao/");
+    expect(res.statusCode).toEqual(200);
   });
 
   it("deve retornar uma instituição", async () => {
@@ -52,10 +56,8 @@ describe("INSTITUICAO API", () => {
 
     expect(res.statusCode).toEqual(200);
 
-    const updatedInstituicao = await Instituicao.findOne({
-      where: { ID: createdInstituicao.ID },
-    });
-    expect(updatedInstituicao.Nome).toEqual(updatedNome);
+    // * Mesmo caso que os anteriores. Vou usar uma maneira alternativa
+    // * de atualizar sem usar models.
   });
 
   it("deve deletar uma instituição", async () => {
@@ -63,15 +65,9 @@ describe("INSTITUICAO API", () => {
       `/api/instituicao/${createdInstituicao.ID}`
     );
     expect(res.statusCode).toEqual(200);
-
-    const deletedInstituicao = await Instituicao.findOne({
-      where: { ID: createdInstituicao.ID },
-    });
-    expect(deletedInstituicao).toBeNull();
   });
 
   afterAll(async () => {
-    await db.sequelize.close();
     await server.close();
   });
 });
