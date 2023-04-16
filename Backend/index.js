@@ -40,12 +40,6 @@ app.use((req, res) => {
   res.status(404).send("Não foi possível encontrar a rota: " + req.url);
 });
 
-// app.listen(port, () => {
-//   console.log(`Backend escutando na porta: ${port}`);
-// });
-//
-// module.exports = app;
-
 const server = app.listen(port, () => {
   console.log(`Backend escutando na porta: ${port}`);
 });
