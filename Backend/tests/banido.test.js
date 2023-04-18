@@ -16,7 +16,7 @@ describe("BANIDO API", () => {
     const usuario = {
       Nome: "Teste",
       Email: "teste@gmail.com",
-      Senha: "123456",
+      Senha: "minha_senha",
       CPF: "12345678910",
       ID_Instituicao: 1, // * Sempre vai existir.
     };
@@ -28,7 +28,10 @@ describe("BANIDO API", () => {
     };
 
     res = await request(app).post("/api/usuario").send(usuario);
-    if (res.statusCode !== 201) process.exit(1);
+    if (res.statusCode !== 201) {
+      console.log(res.statusCode);
+      process.exit(1);
+    }
     createdUsuario = res.body;
 
     res = await request(app).post("/api/grupo").send(grupo);
@@ -79,6 +82,24 @@ describe("BANIDO API", () => {
     const res = await request(app).post("/api/banido/").send({
       ID_Usuario: createdUsuario.ID,
       ID_Grupo: createdGrupo.ID,
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve aceitar uma string no ID_Usuario", async () => {
+    const res = await request(app).post("/api/banido/").send({
+      ID_Usuario: "teste",
+      ID_Grupo: createdGrupo.ID,
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve aceitar uma string no ID_Grupo", async () => {
+    const res = await request(app).post("/api/banido/").send({
+      ID_Usuario: createdUsuario.ID,
+      ID_Grupo: "teste",
     });
 
     expect(res.statusCode).toEqual(400);
