@@ -39,6 +39,60 @@ describe("GRUPO API", () => {
     expect(res.statusCode).toEqual(400);
   });
 
+  it("não deve criar um grupo com nome acima de 50 caracteres", async () => {
+    const nome = "a".repeat(51);
+    const res = await request(app).post("/api/grupo/").send({
+      Nome: nome,
+      Categoria: "Teste",
+      Privado: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar um grupo com categoria acima de 50 caracteres", async () => {
+    const categoria = "a".repeat(51);
+    const res = await request(app).post("/api/grupo/").send({
+      Nome: "Teste",
+      Categoria: categoria,
+      Privado: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar um grupo com nome de 2 caracteres", async () => {
+    const nome = "aa";
+    const res = await request(app).post("/api/grupo/").send({
+      Nome: nome,
+      Categoria: "Teste",
+      Privado: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar um grupo com categoria de 2 caracteres", async () => {
+    const categoria = "aa";
+    const res = await request(app).post("/api/grupo/").send({
+      Nome: "Teste",
+      Categoria: categoria,
+      Privado: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar um grupo com string no campo privado", async () => {
+    const res = await request(app).post("/api/grupo/").send({
+      Nome: "Teste",
+      Categoria: "Teste",
+      Privado: "string",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
   it("deve recuperar todos os grupos", async () => {
     const res = await request(app).get("/api/grupo/");
     expect(res.statusCode).toEqual(200);
