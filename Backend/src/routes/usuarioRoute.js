@@ -1,4 +1,5 @@
 const express = require("express");
+const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
@@ -189,6 +190,26 @@ const saltRounds = 10;
 
 usuario = new CrudController(db.Usuario);
 
+const rules = {
+  Nome: "required|string|min:3|max:100",
+  Email: "required|email",
+  Senha: "required|string|min:6|max:100",
+  CPF: "required|string|min:11|max:11",
+  ID_Instituicao: "required|integer",
+};
+
+router.use((req, res, next) => {
+  if (req.method === "POST" || req.method === "PUT") {
+    const validation = new Validator(req.body, rules);
+    if (validation.fails()) {
+      return res.status(400).send({
+        message: validation.errors.all(),
+      });
+    }
+  }
+  next();
+});
+
 // * Função para gerar salt e senha criptografada.
 const generateSaltAndHash = (senha) => {
   const salt = bcrypt.genSaltSync(saltRounds);
@@ -197,7 +218,6 @@ const generateSaltAndHash = (senha) => {
 };
 
 router.use((req, res, next) => {
-    
   // * Gera salt e hash para a senha
   if (req.body.Senha) {
     const { salt, hash } = generateSaltAndHash(req.body.Senha);

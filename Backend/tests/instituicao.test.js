@@ -13,7 +13,7 @@ describe("INSTITUICAO API", () => {
     };
   });
 
-  it("deve criar uma nova instituicao", async () => {
+  it("deve criar uma nova instituição", async () => {
     const res = await request(app).post("/api/instituicao/").send({
       Nome: "Teste",
       Siglas: "Teste",
@@ -26,6 +26,44 @@ describe("INSTITUICAO API", () => {
     expect(res.body).toHaveProperty("ID");
 
     createdInstituicao = res.body;
+  });
+
+  it("não deve criar uma instituição de nome maior que 255 caracteres", async() => {
+    const nome = "a".repeat(256);
+    const res = await request(app).post("/api/instituicao/").send({
+      Nome: nome,
+      Siglas: "Teste",
+      Logo: "./test.png",
+      Descricao: "Teste",
+      UsaListaEspera: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar uma instituição de nome menor que 3 caracteres", async() => {
+    const nome = "aa";
+    const res = await request(app).post("/api/instituicao/").send({
+      Nome: nome,
+      Siglas: "Teste",
+      Logo: "./test.png",
+      Descricao: "Teste",
+      UsaListaEspera: "false",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve aceitar string no atributo UsaListaEspera", async () => {
+    const res = await request(app).post("/api/instituicao/").send({ 
+      Nome: "Teste",
+      Siglas: "Teste",
+      Logo: "./test.png",
+      Descricao: "Teste",
+      UsaListaEspera: "string",
+    });
+
+    expect(res.statusCode).toEqual(400);
   });
 
   it("deve retornar todas as instituições", async () => {

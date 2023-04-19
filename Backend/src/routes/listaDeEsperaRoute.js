@@ -1,4 +1,5 @@
 const express = require("express");
+const Validator = require("validatorjs")
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
@@ -172,6 +173,23 @@ const CrudController = require("../controllers");
  */
 
 listaDeEspera = new CrudController(db.ListaDeEspera);
+
+const rules = {
+    ID_Instituicao: "required|integer",
+    ID_Usuario: "required|integer",
+};
+
+router.use((req, res, next) => {
+    if(req.method === "POST" || req.method === "PUT"){
+        const validation = new Validator(req.body, rules);
+        if(validation.fails()){
+            return res.status(400).send({
+                message: validation.errors.all()
+            });
+        }
+    }
+    next();
+})
 
 router.post("/", listaDeEspera.create.bind(listaDeEspera));
 router.get("/", listaDeEspera.findAll.bind(listaDeEspera));

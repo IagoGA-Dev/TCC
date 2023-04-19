@@ -1,4 +1,5 @@
 const express = require("express");
+const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
@@ -176,6 +177,24 @@ const CrudController = require("../controllers");
  */
 
 usuarioEspecial = new CrudController(db.UsuarioEspecial);
+
+const rules = {
+  ID_Usuario: "required|integer",
+  Tipo: "required|string|in:Assistente,Professor,Moderador",
+  ID_GrupoModerado: "required|integer",
+};
+
+router.use((req, res, next) => {
+  if (req.method === "POST" || req.method === "PUT") {
+    const validation = new Validator(req.body, rules);
+    if (validation.fails()) {
+      return res.status(400).send({
+        message: validation.errors.all(),
+      });
+    }
+  }
+  next();
+});
 
 router.post("/", usuarioEspecial.create.bind(usuarioEspecial));
 router.get("/", usuarioEspecial.findAll.bind(usuarioEspecial));
