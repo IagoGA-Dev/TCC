@@ -13,6 +13,17 @@ describe("USUARIO API", () => {
     };
   });
 
+  it("não deve criar um novo usuário com um dos campos faltando", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Email: "teste@gmail.com",
+      Senha: "123456",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
   it("deve criar um novo usuário", async () => {
     const res = await request(app).post("/api/usuario/").send({
       Nome: "Teste",
@@ -28,11 +39,66 @@ describe("USUARIO API", () => {
     createdUsuario = res.body;
   });
 
+  it("não deve criar um usuário que já exista", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Email: "teste@gmail.com",
+      Senha: "123456",
+      CPF: "12345678910",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    });
+
+    expect(res.statusCode).toEqual(500);
+  });
+
+  it("não deve criar um usuário com email inválido", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Email: "string",
+      Senha: "123456",
+      CPF: "12345678810",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  // ! Verificação está bem básica por enquanto, só verificando se o CPF tem 11 digitos.
+  it("não deve criar um usuário com CPF inválido", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Email: "teste2@gmail.com",
+      Senha: "123456",
+      CPF: "123",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar um usuário com uma instituição que não existe", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Email: "teste2@gmail.com",
+      Senha: "123456",
+      CPF: "12345678810",
+      ID_Instituicao: -1,
+    });
+
+    expect(res.statusCode).toEqual(500);
+  });
+
   it("deve recuperar um usuário pelo ID", async () => {
     const res = await request(app).get(`/api/usuario/${createdUsuario.ID}`);
 
     expect(res.statusCode).toEqual(200);
     expect(res.body.Nome).toEqual("Teste");
+  });
+
+  it("não deve retornar um usuário com ID inválido", async () => {
+    const res = await request(app).get(`/api/usuario/-1`);
+
+    expect(res.statusCode).toEqual(404);
   });
 
   it("deve atualizar um usuário", async () => {
@@ -51,11 +117,33 @@ describe("USUARIO API", () => {
     expect(res.statusCode).toEqual(200);
   });
 
+  it("não deve atualizar um usuário com ID inválido", async () => {
+    const updatedNome = "Teste Atualizado";
+    const res = await request(app)
+      .put(`/api/usuario/-1`)
+      .send({
+        Nome: updatedNome,
+        Email: createdUsuario.Email,
+        Senha: createdUsuario.Senha,
+        CPF: createdUsuario.CPF,
+        ID_Instituicao: createdUsuario.ID_Instituicao
+      });
+
+    expect(res.statusCode).toEqual(404);
+  })
+
   it("deve deletar um usuário", async () => {
     const res = await request(app).delete(`/api/usuario/${createdUsuario.ID}`);
 
     expect(res.statusCode).toEqual(200);
   });
+
+  it("não deve criar um usuário com ID inválido", async () => {
+    const res = await request(app).delete(`/api/usuario/-1`);
+
+    expect(res.statusCode).toEqual(404);
+  })
+
   afterAll(async () => {
     await server.close();
   });

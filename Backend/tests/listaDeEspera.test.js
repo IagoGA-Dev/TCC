@@ -117,6 +117,11 @@ describe("LISTA_DE_ESPERA API", () => {
     expect(res.body.ID).toEqual(createdListaDeEspera.ID);
   });
 
+  it("não deve retornar uma lista de espera com ID inválido", async () => {
+    const res = await request(app).get(`/api/listaDeEspera/-1`);
+    expect(res.statusCode).toEqual(404);
+  });
+
   it("deve atualizar uma lista de espera", async () => {
     const updatedInstituicao = 1;
     const res = await request(app)
@@ -129,11 +134,28 @@ describe("LISTA_DE_ESPERA API", () => {
       expect(res.statusCode).toEqual(200);
   });
 
+  it("não deve atualizar uma lista de espera com ID inválido", async () => {
+    const updatedInstituicao = 1;
+    const res = await request(app)
+      .put(`/api/listaDeEspera/-1`)
+      .send({
+        ID_Instituicao: updatedInstituicao,
+        ID_Usuario: createdUsuario.ID,
+      });
+
+      expect(res.statusCode).toEqual(404);
+  });
+
   it("deve deletar uma lista de espera", async () => {
     const res = await request(app).delete(
       `/api/listaDeEspera/${createdListaDeEspera.ID}`
     );
     expect(res.statusCode).toEqual(200); // * Retornar 200 já é o suficiente
+  });
+
+  it("não deve deletar uma lista de espera com ID inválido", async () => {
+    const res = await request(app).delete(`/api/listaDeEspera/-1`);
+    expect(res.statusCode).toEqual(404);
   });
 
   afterAll(async () => {

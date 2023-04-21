@@ -28,7 +28,6 @@ describe("GRUPO API", () => {
     createdGrupo = res.body;
   });
 
-  // * Provavelmente vai funcionar já que o controller é o mesmo.
   it("não deve criar um grupo que já existe", async () => {
     const res = await request(app).post("/api/grupo/").send({
       Nome: "Teste",
@@ -123,6 +122,16 @@ describe("GRUPO API", () => {
     // TODO: Verificar atualização por API.
   });
 
+  it("não deve atualizar um grupo que não existe", async () => {
+    const res = await request(app).put("/api/grupo/-1").send({
+      Nome: "Teste",
+      Categoria: "Teste",
+      Privado: "false",
+    });
+
+    expect(res.statusCode).toEqual(404);
+  });
+
   it("deve deletar um grupo", async () => {
     const res = await request(app).delete(`/api/grupo/${createdGrupo.ID}`); // * ...
 
@@ -130,6 +139,12 @@ describe("GRUPO API", () => {
 
     // * Verificar se o código é 200 já é o suficiente
     // * Mas pode ser interessante fazer uma busca posteriormente.
+  });
+
+  it ("não deve deletar um grupo que não existe", async () => {
+    const res = await request(app).delete("/api/grupo/-1");
+
+    expect(res.statusCode).toEqual(404);
   });
 
   afterAll(async () => {

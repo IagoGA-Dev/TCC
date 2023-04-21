@@ -80,6 +80,11 @@ describe("INSTITUICAO API", () => {
     expect(res.body.ID).toEqual(createdInstituicao.ID);
   });
 
+  it("não deve retornar uma instituição que não existe", async () => {
+    const res = await request(app).get(`/api/instituicao/-1`);
+    expect(res.statusCode).toEqual(404);
+  });
+
   it("deve atualizar uma instituição", async () => {
     const updatedNome = "Teste Atualizado";
     const res = await request(app)
@@ -98,11 +103,31 @@ describe("INSTITUICAO API", () => {
     // * de atualizar sem usar models.
   });
 
+  it("não deve atualizar uma instituição que não existe", async () => {
+    const updatedNome = "Teste Atualizado";
+    const res = await request(app)
+      .put(`/api/instituicao/-1`)
+      .send({
+        Nome: updatedNome,
+        Siglas: "Teste",
+        Logo: "./test.png",
+        Descricao: "Teste",
+        UsaListaEspera: "false",
+      });
+
+    expect(res.statusCode).toEqual(404);
+  });
+
   it("deve deletar uma instituição", async () => {
     const res = await request(app).delete(
       `/api/instituicao/${createdInstituicao.ID}`
     );
     expect(res.statusCode).toEqual(200);
+  });
+
+  it("não deve deletar uma instituição que não existe", async () => {
+    const res = await request(app).delete(`/api/instituicao/-1`);
+    expect(res.statusCode).toEqual(404);
   });
 
   afterAll(async () => {
