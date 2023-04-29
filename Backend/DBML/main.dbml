@@ -1,0 +1,115 @@
+// Tipos de usuários.
+// "Estudante" não é incluso porque ele é o usuário padrão.
+// Esses só são referentes aos tipos de usuários especiais.
+Enum "UsuarioEspecial_Tipo_enum" {
+  "Assistente"
+  "Professor"
+  "Moderador"
+}
+
+// Não acredito que seja necessário, mas pode ser adicionado
+// uma coluna "ID_Moderador" para que fique uma cardinalidade
+// 1..1 entre eles.
+Table "Instituicao" {
+  "ID" INT(11) [pk] // Auto_Increment
+  "Nome" VARCHAR(255) [not null]
+  "Siglas" VARCHAR(255) [not null]
+  "Logo" VARCHAR(255)
+  "Descricao" TEXT
+  "UsaListaEspera" BOOL [not null, default: 0]
+}
+
+// Por padrão é do tipo "Estudante".
+Table "Usuario" {
+  "ID" INT(11) [pk] // Auto_Increment
+  "Nome" VARCHAR(255) [not null]
+  "Email" VARCHAR(255) [not null]
+  "Senha" VARCHAR(255) [not null]
+  // Caso haja um vazamento do banco de dados.
+  "Salt" VARCHAR(255) [not null]
+  "CPF" VARCHAR(11) [not null]
+  // Se o usuário for um moderador, essa vai ser a instituição
+  // que ele vai moderar.
+  "ID_Instituicao" INT(11) [not null]
+}
+
+// É um pedido do usuário que deve ser aceito pela instituição para
+// que ele faça parte da instituição.
+// Só vai ser necessário se a instituição precisar, então
+// UsaListaEspera = 1.
+Table "ListaDeEspera" {
+  "ID" INT(11) [pk]
+  "ID_Instituicao" INT(11) [not null]
+  "ID_Usuario" INT(11) [not null]
+}
+
+// São os grupos que o usuário vai fazer parte.
+// Os grupos podem ser divididos em diferentes categorias.
+// Então pode haver um grupo para estatistica descritiva e
+// cálculo, mas ambos podem ser categorizados como
+// "matemática" para facilitar a busca.
+Table "Grupo" {
+  "ID" INT(11) [pk]
+  "Nome" VARCHAR(255) [not null]
+  "Categoria" VARCHAR(255)
+  "Privado" BOOL [not null, default: 0]
+}
+
+
+// Essa tabela é usada para registrar quais usuários estão vinculados
+// com quais grupos.
+Table "UsuarioGrupo" {
+  "ID" INT(11) [pk]
+  "ID_Usuario" INT(11) [not null]
+  "ID_Grupo" INT(11) [not null]
+}
+
+// É como uma especialização do usuário, então ele vai manter as
+// características do usuário e receber atributos a mais ao virar
+// um usuário especial.
+Table "UsuarioEspecial" {
+  "ID" INT(11) [pk]
+  "ID_Usuario" INT(11) [not null]
+  // Assistente, Professor ou Moderador.
+  // Os limites de acesso vão ser definidos dentro da aplicação.
+  "Tipo" UsuarioEspecial_Tipo_enum [not null]
+  // -1 para moderador
+  "ID_GrupoModerado" INT(11) [not null]
+}
+
+// Tabela para registrar os usuários banidos e de quais grupos.
+Table "Banido" {
+  "ID" INT(11) [pk]
+  "ID_Usuario" INT(11) [not null]
+  "ID_Grupo" INT(11) [not null]
+}
+
+// Mensagens enviadas por usuários
+Table "Mensagem" {
+  "ID" INT(11) [pk]
+  "ID_Usuario" INT(11) [not null]
+  // O tempo de vida útil vai ser derivado desse atributo
+  "Data" DATETIME [not null]
+  "ID_Grupo" INT(11) [not null]
+  "Texto" TEXT
+  "Imagem" VARCHAR(255)
+  "Arquivo" VARCHAR(255)
+  // Limites vão variar dependendo dos conteúdos
+  // Deve ser feito restrições futuramente.
+  "Tamanho" INT(11) [not null]
+}
+
+// Referênciando as chaves estrangeiras
+Ref:"Instituicao"."ID" < "Usuario"."ID_Instituicao"
+Ref:"Instituicao"."ID" < "ListaDeEspera"."ID_Instituicao"
+
+Ref:"Usuario"."ID" < "ListaDeEspera"."ID_Usuario"
+Ref:"Usuario"."ID" < "UsuarioGrupo"."ID_Usuario"
+Ref:"Usuario"."ID" < "UsuarioEspecial"."ID_Usuario"
+Ref:"Usuario"."ID" < "Banido"."ID_Usuario"
+Ref:"Usuario"."ID" < "Mensagem"."ID_Usuario"
+
+Ref:"Grupo"."ID" < "UsuarioGrupo"."ID_Grupo"
+Ref:"Grupo"."ID" < "UsuarioEspecial"."ID_GrupoModerado"
+Ref:"Grupo"."ID" < "Banido"."ID_Grupo"
+Ref:"Grupo"."ID" < "Mensagem"."ID_Grupo"

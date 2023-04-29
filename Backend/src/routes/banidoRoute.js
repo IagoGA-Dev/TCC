@@ -3,6 +3,7 @@ const Validator = require("validatorjs");
 const CrudController = require("../controllers");
 const router = express.Router();
 const db = require("../models");
+const { validateBanido } = require("../middleware");
 // const { banPostMiddleware } = require("../middlewares");
 
 /**
@@ -169,24 +170,7 @@ const db = require("../models");
 
 banido = new CrudController(db.Banido);
 
-const rules = {
-  ID_Usuario: "required|integer",
-  ID_Grupo: "required|integer",
-};
-
-router.use((req, res, next) => {
-  // * Só valida se for POST ou PUT
-  if (req.method === "POST" || req.method === "PUT") {
-    const validation = new Validator(req.body, rules);
-    if (validation.fails()) {
-      return res.status(400).send({
-        message: validation.errors.all(),
-      });
-    }
-  }
-  next();
-});
-
+router.use(validateBanido);
 router.post("/", banido.create.bind(banido));
 router.get("/", banido.findAll.bind(banido));
 router.get("/search", banido.search.bind(banido));

@@ -3,6 +3,7 @@ const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
+const { validateMensagem } = require("../middleware");
 
 /**
  * @swagger
@@ -184,26 +185,7 @@ const CrudController = require("../controllers");
 
 mensagem = new CrudController(db.Mensagem);
 
-const rules = {
-  Data: "required|date",
-  Texto: "required|string|max:500", // ! Temporário, alterar posteriormente para entrar de acordo com tamanho máximo em MB.
-  Imagem: "string", // * Path
-  Arquivo: "string",
-  Tamanho: "integer",
-};
-
-router.use((req, res, next) => {
-  if (req.method === "POST" || req.method === "PUT") {
-    const validation = new Validator(req.body, rules);
-    if (validation.fails()) {
-      return res.status(400).send({
-        message: validation.errors.all(),
-      });
-    }
-  }
-  next();
-});
-
+router.use(validateMensagem);
 router.post("/", mensagem.create.bind(mensagem));
 router.get("/", mensagem.findAll.bind(mensagem));
 router.get("/search", mensagem.search.bind(mensagem));

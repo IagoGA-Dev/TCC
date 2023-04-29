@@ -3,6 +3,7 @@ const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
+const { validateInstituicao } = require("../middleware");
 
 /**
  *  @swagger
@@ -189,26 +190,7 @@ const CrudController = require("../controllers");
 
 instituicao = new CrudController(db.Instituicao);
 
-const rules = {
-  Nome: "required|string|min:3|max:255",
-  Siglas: "required|string|min:3|max:255",
-  Logo: "required|string|min:3|max:255",
-  Descricao: "string|min:3|max:255",
-  UsaListaEspera: "boolean",
-};
-
-router.use((req, res, next) => {
-  if (req.method === "POST" || req.method === "PUT") {
-    const validation = new Validator(req.body, rules);
-    if (validation.fails()) {
-      return res.status(400).send({
-        message: validation.errors.all(),
-      });
-    }
-  }
-  next();
-});
-
+router.use(validateInstituicao);
 router.post("/", instituicao.create.bind(instituicao));
 router.get("/", instituicao.findAll.bind(instituicao));
 router.get("/search", instituicao.search.bind(instituicao));

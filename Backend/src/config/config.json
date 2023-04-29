@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "root",
+    "username": "void",
     "password": "123",
     "database": "tcc",
     "host": "127.0.0.1",

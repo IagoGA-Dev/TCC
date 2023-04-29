@@ -3,6 +3,7 @@ const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
 const CrudController = require("../controllers");
+const { validateUsuarioGrupo } = require("../middleware");
 
 /**
  * @swagger
@@ -172,23 +173,7 @@ const CrudController = require("../controllers");
 
 usuarioGrupo = new CrudController(db.UsuarioGrupo);
 
-const rules = {
-  ID_Usuario: "required|integer",
-  ID_Grupo: "required|integer",
-};
-
-router.use((req, res, next) => {
-  if (req.method === "POST" || req.method === "PUT") {
-    const validation = new Validator(req.body, rules);
-    if (validation.fails()) {
-      return res.status(400).send({
-        message: validation.errors.all(),
-      });
-    }
-  }
-  next();
-});
-
+router.use(validateUsuarioGrupo);
 router.post("/", usuarioGrupo.create.bind(usuarioGrupo));
 router.get("/", usuarioGrupo.findAll.bind(usuarioGrupo));
 router.get("/search", usuarioGrupo.search.bind(usuarioGrupo));
