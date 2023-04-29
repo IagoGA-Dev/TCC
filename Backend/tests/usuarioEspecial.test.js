@@ -17,7 +17,7 @@ describe("USUARIO ESPECIAL API", () => {
       Nome: "Teste",
       Email: "teste@gmail.com",
       Senha: "123456",
-      CPF: "12345678910",
+      CPF: "05353932021",
       ID_Instituicao: 1, // * Sempre vai existir.
     };
     res = await requests(app).post("/api/usuario/").send(usuario);

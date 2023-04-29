@@ -36,7 +36,7 @@ describe("LISTA_DE_ESPERA API", () => {
       Nome: "Teste Usuario",
       Email: "teste@example.com",
       Senha: "test123",
-      CPF: "12345678900",
+      CPF: "05353932021",
       ID_Instituicao: createdInstituicao.ID,
     };
 

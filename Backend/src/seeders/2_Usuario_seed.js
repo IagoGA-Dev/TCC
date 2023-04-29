@@ -12,7 +12,7 @@ module.exports = {
           Email: "joao.silva@ifsp.br",
           Senha: "9a7e7f1d4c7849abc45e81f24a04fe32",
           Salt: "salt123",
-          CPF: "12345678901",
+          CPF: "94853484019",
           ID_Instituicao: 1,
         },
         {
@@ -21,7 +21,7 @@ module.exports = {
           Email: "maria.santos@usp.br",
           Senha: "76c0380ec3703dd1388b8f7a2cacc39e",
           Salt: "salt456",
-          CPF: "23456789012",
+          CPF: "03934784089",
           ID_Instituicao: 2,
         },
         {
@@ -30,7 +30,7 @@ module.exports = {
           Email: "pedro.souza@ufpe.br",
           Senha: "a06d7e6319ffd18ba1ddc830489136ee",
           Salt: "salt789",
-          CPF: "34567890123",
+          CPF: "84511707065",
           ID_Instituicao: 3,
         },
       ],

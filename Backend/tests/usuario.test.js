@@ -29,7 +29,7 @@ describe("USUARIO API", () => {
       Nome: "Teste",
       Email: "teste@gmail.com",
       Senha: "123456",
-      CPF: "12345678910",
+      CPF: "05353932021",
       ID_Instituicao: 1, // * Sempre vai existir.
     });
 
@@ -44,7 +44,7 @@ describe("USUARIO API", () => {
       Nome: "Teste",
       Email: "teste@gmail.com",
       Senha: "123456",
-      CPF: "12345678910",
+      CPF: "05353932021",
       ID_Instituicao: 1, // * Sempre vai existir.
     });
 
@@ -56,15 +56,14 @@ describe("USUARIO API", () => {
       Nome: "Teste",
       Email: "string",
       Senha: "123456",
-      CPF: "12345678810",
+      CPF: "05353932021",
       ID_Instituicao: 1, // * Sempre vai existir.
     });
 
     expect(res.statusCode).toEqual(400);
   });
 
-  // ! Verificação está bem básica por enquanto, só verificando se o CPF tem 11 digitos.
-  it("não deve criar um usuário com CPF inválido", async () => {
+  it("não deve criar um usuário com CPF inválido (dígitos insuficientes)", async () => {
     const res = await request(app).post("/api/usuario/").send({
       Nome: "Teste",
       Email: "teste2@gmail.com",
@@ -76,12 +75,39 @@ describe("USUARIO API", () => {
     expect(res.statusCode).toEqual(400);
   });
 
+  it("não deve criar um usuário com CPF inválido (digitos verificadores)", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Nome: "Teste",
+      Email: "teste2@gmail.com",
+      Senha: "123456",
+      CPF: "05353932022",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+  it("não deve criar um usuário com CPF inválido (00000000000)", async () => {
+    const res = await request(app).post("/api/usuario/").send({
+      Nome: "Teste",
+      Nome: "Teste",
+      Email: "teste2@gmail.com",
+      Senha: "123456",
+      CPF: "00000000000",
+      ID_Instituicao: 1, // * Sempre vai existir.
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
+
   it("não deve criar um usuário com uma instituição que não existe", async () => {
     const res = await request(app).post("/api/usuario/").send({
       Nome: "Teste",
       Email: "teste2@gmail.com",
       Senha: "123456",
-      CPF: "12345678810",
+      CPF: "05353932021",
       ID_Instituicao: -1,
     });
 

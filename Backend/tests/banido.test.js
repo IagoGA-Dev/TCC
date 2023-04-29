@@ -17,7 +17,7 @@ describe("BANIDO API", () => {
       Nome: "Teste",
       Email: "teste@gmail.com",
       Senha: "minha_senha",
-      CPF: "12345678910",
+      CPF: "05353932021",
       ID_Instituicao: 1, // * Sempre vai existir.
     };
 
