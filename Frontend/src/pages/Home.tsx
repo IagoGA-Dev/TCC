@@ -1,20 +1,17 @@
 import Navbar from "../components/Navbar";
 import Notebook from "../assets/notebook.svg";
+import { AiOutlineArrowRight } from "react-icons/ai";
 
 function Home() {
   return (
     <div className="py-9">
-      <Navbar />
-      <div className="px-40 py-32 grid grid-cols-2 items-center gap-20">
-        <div>
-          {/* Headline */}
-
-          <h1 className="font-merriweather font-bold text-3xl">
+      <Navbar activeItem="home" />
+      <div className="px-6 md:px-40 py-12 md:py-32 grid grid-cols-1 lg:grid-cols-2 items-center gap-20">
+        <div className="m-14">
+          <h1 className="font-merriweather font-bold text-3xl md:text-4xl">
             Estude de forma descomplicada
           </h1>
-
-          {/* Texto */}
-          <div className="leading-7 w-4/5">
+          <div className="leading-7 w-full md:w-4/5">
             <ul className="font-poppins list-disc pt-6">
               <li>
                 Encontre e conecte-se com vários estudantes que compartilham
@@ -31,20 +28,20 @@ function Home() {
             </ul>
             <p>Tudo isso em uma plataforma online gratuita e fácil de usar!</p>
           </div>
-
-          {/* "Call for action" <- Botões */}
-          <div className="flex-row pt-6">
-            <button
-              className="bg-primary text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-primary-dark">
+          <div className="flex-row pt-6 flex gap-4">
+            <button className="bg-primary text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-primary-dark">
               Entre Agora!
             </button>
             <button
-              className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg">
-              Registre-se!
+              className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group
+           "
+            >
+              Registre-se!{" "}
+              <AiOutlineArrowRight className="inline-block transition group-hover:translate-x-1" />
             </button>
           </div>
         </div>
-        <div>
+        <div className="md:justify-self-end">
           <img src={Notebook} alt="Notebook" />
         </div>
       </div>

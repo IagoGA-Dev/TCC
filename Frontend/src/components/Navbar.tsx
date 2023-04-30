@@ -24,30 +24,32 @@ function NavBarItem(props: {
         <div
           className={`border-b-2 ${
             props.active ? "border-black" : "border-gray-300"
-          } w-3 rounded-3xl transition duration-300 group-hover:border-black group-hover:scale-x-150 
-          `}
+          } w-3 rounded-3xl transition-all duration-300 group-hover:border-black 
+            group-hover:w-4/5`}
         ></div>
       </Link>
     </>
   );
 }
 
-function Navbar() {
+
+
+function Navbar(props: { activeItem: string } = { activeItem: "home" }) {
   return (
     <div className="bg-white text-black">
       <div className="container mx-auto flex justify-between">
         <Logo />
         <div className="flex">
-          <NavBarItem to="/" active={true}>
+          <NavBarItem to="/" active={props.activeItem === "home"}>
             Início
           </NavBarItem>
-          <NavBarItem to="/" active={false}>
+          <NavBarItem to="/features" active={props.activeItem === "features"}>
             Funcionalidades
           </NavBarItem>
-          <NavBarItem to="/" active={false}>
+          <NavBarItem to="/info" active={props.activeItem === "info"}>
             Informações
           </NavBarItem>
-          <NavBarItem to="/" active={false}>
+          <NavBarItem to="/contact" active={props.activeItem === "contact"}>
             Contato
           </NavBarItem>
         </div>
