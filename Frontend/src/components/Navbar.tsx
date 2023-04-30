@@ -32,8 +32,6 @@ function NavBarItem(props: {
   );
 }
 
-
-
 function Navbar(props: { activeItem: string } = { activeItem: "home" }) {
   return (
     <div className="bg-white text-black">
