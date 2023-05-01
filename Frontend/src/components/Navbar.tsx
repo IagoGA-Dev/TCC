@@ -2,10 +2,12 @@ import { Link } from "react-router-dom";
 
 function Logo() {
   return (
-    <div className="flex-col font-montserrat">
-      <h1 className="text-xl font-bold">NomeTemp</h1>
-      <h2 className="text-sm font-light">Grupos de Estudo!</h2>
-    </div>
+    <Link to="/" className="flex items-center gap-2 hover:scale-105 transition duration-300">
+      <div className="flex-col font-montserrat">
+        <h1 className="text-xl font-bold">NomeTemp</h1>
+        <h2 className="text-sm font-light">Grupos de Estudo!</h2>
+      </div>
+    </Link>
   );
 }
 

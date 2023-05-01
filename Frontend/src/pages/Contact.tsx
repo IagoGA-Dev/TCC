@@ -4,7 +4,9 @@ function Contact() {
   return (
     <div className="py-9">
       <Navbar activeItem="contact" />
-      <div>Contato</div>
+      <div className="text-center">
+        Contato
+      </div>
     </div>
   );
 }

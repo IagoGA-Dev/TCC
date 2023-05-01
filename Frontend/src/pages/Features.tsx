@@ -24,27 +24,6 @@ function Features() {
         <>Um calendário personalizado para organizar suas tarefas, provas e compromissos. 
         Além de poder marcar reuniões presenciais com seus colegas!</>
       ),
-    },{
-      image: Calendar,
-      left: true,
-      children: (
-        <>Um calendário personalizado para organizar suas tarefas, provas e compromissos. 
-        Além de poder marcar reuniões presenciais com seus colegas!</>
-      ),
-    },{
-      image: Calendar,
-      left: true,
-      children: (
-        <>Um calendário personalizado para organizar suas tarefas, provas e compromissos. 
-        Além de poder marcar reuniões presenciais com seus colegas!</>
-      ),
-    },{
-      image: Calendar,
-      left: true,
-      children: (
-        <>Um calendário personalizado para organizar suas tarefas, provas e compromissos. 
-        Além de poder marcar reuniões presenciais com seus colegas!</>
-      ),
     },
   ];
 
@@ -54,7 +33,7 @@ function Features() {
       <div className="px-6 md:px-40 py-15 md:py-15 text-center items-center">
         <div className="m-14">
           <h1 className="font-merriweather font-bold text-3xl md:text-4xl">
-            Funcionalidades
+            Funcionalidades 
           </h1>
           <div className="pt-10">
             <span className="">

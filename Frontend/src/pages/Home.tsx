@@ -1,6 +1,7 @@
 import Navbar from "../components/Navbar";
 import Notebook from "../assets/notebook.svg";
 import { AiOutlineArrowRight } from "react-icons/ai";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -29,9 +30,9 @@ function Home() {
             <p>Tudo isso em uma plataforma online gratuita e fácil de usar!</p>
           </div>
           <div className="flex-row pt-6 flex gap-4">
-            <button className="bg-primary text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-primary-dark">
+            <Link to="/login" className="bg-primary text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-primary-dark">
               Entre Agora!
-            </button>
+            </Link>
             <button
               className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group
            "
