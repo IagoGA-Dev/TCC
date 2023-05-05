@@ -28,13 +28,13 @@ function Login() {
             >
               Entrar
             </button>
-            <button
-              type="button"
-              className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group"
+            <Link
+              to="/register"
+              className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group justify-center text-center"
             >
               Registre-se!{" "}
               <AiOutlineArrowRight className="inline-block transition group-hover:translate-x-1" />
-            </button>
+            </Link>
           </div>
         </form>
         <Link

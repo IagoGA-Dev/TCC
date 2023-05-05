@@ -2,7 +2,7 @@ const express = require("express");
 const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
-const CrudController = require("../controllers");
+const { CrudController } = require("../controllers");
 const { validateMensagem } = require("../middleware");
 
 /**

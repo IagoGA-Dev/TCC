@@ -23,9 +23,10 @@
   },
   "scripts": {
     "start": "nodemon index.js",
+    "dev": "nodemon index.js",
     "test": "npx jest --runInBand --silent=true",
-    "clean_db": "cd src/; npx sequelize db:migrate:undo:all; npx sequelize db:migrate; npx sequelize db:seed:all",
-    "clean_test": "yarn clean_db; yarn test --coverage --detectOpenHandles"
+    "clean_db": "cd src & npx sequelize db:migrate:undo:all & npx sequelize db:migrate & npx sequelize db:seed:all",
+    "clean_test": "yarn clean_db & yarn test --coverage --detectOpenHandles"
   },
   "devDependencies": {
     "jest": "^29.5.0"

@@ -2,7 +2,7 @@ const express = require("express");
 const Validator = require("validatorjs");
 const router = express.Router();
 const db = require("../models");
-const CrudController = require("../controllers");
+const { UsuarioController } = require("../controllers");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { validateUsuario } = require("../middleware");
@@ -189,7 +189,7 @@ const { validateUsuario } = require("../middleware");
  *         $ref: '#/components/schemas/500'
  */
 
-usuario = new CrudController(db.Usuario);
+usuario = new UsuarioController(db.Usuario);
 
 router.use(validateUsuario);
 
@@ -213,6 +213,7 @@ router.use((req, res, next) => {
 router.post("/", usuario.create.bind(usuario));
 router.get("/", usuario.findAll.bind(usuario));
 router.get("/search", usuario.search.bind(usuario));
+router.post("/login", usuario.login.bind(usuario));
 router.get("/:id", usuario.findOne.bind(usuario));
 router.put("/:id", usuario.update.bind(usuario));
 router.delete("/:id", usuario.delete.bind(usuario));

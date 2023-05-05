@@ -1,16 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { createMemoryRouter, RouterProvider } from "react-router";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// import { createMemoryRouter, RouterProvider } from "react-router";
 
 import Home from "./pages/Home.tsx";
 import Features from "./pages/Features.tsx";
 import Contact from "./pages/Contact.tsx";
 import Info from "./pages/Info.tsx";
 import Login from "./pages/Login.tsx";
+import Register from "./pages/Register.tsx";
 
-const router = createMemoryRouter([
+// Pretendo usar MemoryBrowserRouter no final do projeto.
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
@@ -30,7 +32,11 @@ const router = createMemoryRouter([
   {
     path: "/login",
     element: <Login />,
-  }
+  },
+  {
+    path: "/register",
+    element: <Register />,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(

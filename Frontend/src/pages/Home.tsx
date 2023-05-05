@@ -29,21 +29,22 @@ function Home() {
             </ul>
             <p>Tudo isso em uma plataforma online gratuita e fácil de usar!</p>
           </div>
-          <div className="flex-row pt-6 flex gap-4">
-            <Link to="/login" className="bg-primary text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-primary-dark">
+          <div className="lg:flex-row flex-col pt-6 flex gap-4">
+            <Link to="/login" className="text-center bg-primary text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-primary-dark">
               Entre Agora!
             </Link>
-            <button
-              className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group
+            <Link
+              to="/register"
+              className="text-center bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group
            "
             >
               Registre-se!{" "}
               <AiOutlineArrowRight className="inline-block transition group-hover:translate-x-1" />
-            </button>
+            </Link>
           </div>
         </div>
-        <div className="md:justify-self-end">
-          <img src={Notebook} alt="Notebook" />
+        <div className="invisible md:visible">
+          <img src={Notebook} alt="Notebook"/>
         </div>
       </div>
     </div>

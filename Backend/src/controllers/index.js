@@ -258,4 +258,50 @@ class CrudController {
   }
 }
 
-module.exports = CrudController;
+class UsuarioController extends CrudController {
+  async login(req, res) {
+    bcrypt = require("bcryptjs");
+    const { email, senha } = req.body;
+
+    if (!email || !senha) {
+      res.status(400).send({
+        code: 1,
+        message: "Falha no corpo da requisição",
+      });
+    }
+
+    const usuario = await this.model.findOne({
+      where: { email },
+    });
+
+    if (!usuario) {
+      res.status(404).send({
+        code: 2,
+        message: "Objeto da requisição não encontrado",
+      });
+    }
+
+    const senhaValida = await bcrypt.compare(senha, usuario.senha);
+
+    if (!senhaValida) {
+      res.status(401).send({
+        code: 3,
+        message: "Senha inválida",
+      });
+    }
+
+    // TODO: Implementar autêncação JWT
+
+    res.session.usuario = usuario;
+
+    res.status(200).send({
+      code: 200,
+      message: "Usuário autenticado com sucesso",
+    });
+  }
+}
+
+module.exports = {
+  CrudController,
+  UsuarioController,
+};
