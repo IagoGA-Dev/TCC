@@ -1,6 +1,7 @@
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
+const cors = require("cors");
 
 const swaggerOptions = {
   definition: {
@@ -29,6 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({
   extended: true
 }));
+
+app.use(cors());
 
 // app.use(morgan("dev"));
 

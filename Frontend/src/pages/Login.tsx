@@ -1,12 +1,36 @@
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
 import { Link } from "react-router-dom";
+import api from "../services/api";
+
+// * Logs email and password
 
 function Login() {
+  
+  // ! Lidar com setState de error posteriormente
+  function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    api.post("/usuario/login", {
+      Email: e.currentTarget.email.value,
+      Senha: e.currentTarget.password.value,
+    }).then((res) => {
+      console.log(res.data);
+    }
+    ).catch((err) => {
+      console.log(err);
+    }
+    );
+  }
+
   return (
     <div className="h-screen flex flex-col justify-center items-center bg-gray-100">
       <div className="max-w-md w-full mx-auto rounded-lg shadow-lg bg-white p-6">
         <h1 className="text-4xl font-bold text-center mb-6">Login</h1>
-        <form className="w-full">
+        <form className="w-full"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLogin(e);
+          }}
+        >
           <div className="flex flex-col gap-4">
             <label htmlFor="email">Email</label>
             <input
