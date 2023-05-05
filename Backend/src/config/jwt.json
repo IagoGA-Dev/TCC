@@ -1,0 +1,6 @@
+{
+  "secret": "minha-chave-secreta",
+  "refreshTokenSecret": "minha-chave-secreta-refresh-token",
+  "tokenLife": 900,
+  "refreshTokenLife": 86400
+}

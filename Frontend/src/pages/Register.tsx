@@ -61,13 +61,13 @@ function Register() {
             >
               Registrar
             </button>
-            <button
-              type="button"
-              className="bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group"
+            <Link
+              to="/login"
+              className="text-center bg-transparent text-black font-montserrat py-3 px-5 rounded-sm text-lg transition hover:bg-gray-200 group"
             >
               Já possuí conta?{" "}
               <AiOutlineArrowRight className="inline-block transition group-hover:translate-x-1" />
-            </button>
+            </Link>
           </div>
         </form>
         <Link

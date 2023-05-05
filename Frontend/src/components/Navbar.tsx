@@ -57,6 +57,9 @@ function Navbar({ activeItem }: NavbarProps = { activeItem: "home" }) {
       <NavBarItem to="/contact" active={activeItem === "contact"}>
         Contato
       </NavBarItem>
+      <NavBarItem to="/profile" active={activeItem === "profile"}>
+        Perfil
+      </NavBarItem>
     </>
   );
 

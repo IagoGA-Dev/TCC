@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const auth = require("../middleware/auth");
+
 
 fs.readdirSync(__dirname).forEach((file) => {
   // * Importar error iria separar uma rota única para ele

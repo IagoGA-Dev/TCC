@@ -215,6 +215,7 @@ router.use((req, res, next) => {
 router.post("/", usuario.create.bind(usuario));
 router.get("/", usuario.findAll.bind(usuario));
 router.get("/search", usuario.search.bind(usuario));
+router.get("/info", usuario.info.bind(usuario));
 router.get("/:id", usuario.findOne.bind(usuario));
 router.put("/:id", usuario.update.bind(usuario));
 router.delete("/:id", usuario.delete.bind(usuario));

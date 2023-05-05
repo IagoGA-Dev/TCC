@@ -10,6 +10,7 @@ import Contact from "./pages/Contact.tsx";
 import Info from "./pages/Info.tsx";
 import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
+import Profile from "./pages/Profile.tsx";
 
 // Pretendo usar MemoryBrowserRouter no final do projeto.
 const router = createBrowserRouter([
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
   {
     path: "/register",
     element: <Register />,
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
   },
 ]);
 

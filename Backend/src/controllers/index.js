@@ -240,9 +240,9 @@ class CrudController {
 }
 
 class UsuarioController extends CrudController {
-  // TODO: Implementar JWT
-  // ? Acredito que não seja necessário armazenar o salt no db...
   async login(req, res) {
+    const { createToken, createRefreshToken } = require("../middleware/auth");
+    const config = require("../config/jwt.json");
     const bcrypt = require("bcrypt");
     const { Email, Senha } = req.body;
 
@@ -257,11 +257,16 @@ class UsuarioController extends CrudController {
       if (data) {
         bcrypt.compare(Senha, data.Senha).then((result) => {
           if (result) {
-            // res.session.user = data;
+            const token = createToken(data);
+            const refreshToken = createRefreshToken(data);
+
             res.status(200).send({
               code: 200,
               message: "Usuário autenticado com sucesso",
+              token: token,
+              refreshToken: refreshToken,
             });
+
           } else {
             res.status(401).send({
               code: 3,
@@ -269,6 +274,32 @@ class UsuarioController extends CrudController {
             });
           }
         });
+      } else {
+        res.status(404).send({
+          code: 2,
+          message: "Objeto da requisição não encontrado",
+        });
+      }
+    });
+  }
+
+  async info(req, res) {
+    const { decryptToken } = require("../middleware/auth");
+    const token = req.headers["x-access-token"];
+
+    if (!token) {
+      res.status(401).send({
+        code: 1,
+        message: "Token não fornecido",
+      });
+    }
+
+    const decoded = decryptToken(token);
+    const id = decoded.id;
+
+    this.model.findByPk(id).then((data) => {
+      if (data) {
+        res.status(200).send(data);
       } else {
         res.status(404).send({
           code: 2,
