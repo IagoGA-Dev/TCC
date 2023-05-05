@@ -257,7 +257,7 @@ class UsuarioController extends CrudController {
       if (data) {
         bcrypt.compare(Senha, data.Senha).then((result) => {
           if (result) {
-            res.session.user = data;
+            // res.session.user = data;
             res.status(200).send({
               code: 200,
               message: "Usuário autenticado com sucesso",

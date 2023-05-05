@@ -39,6 +39,42 @@ describe("USUARIO API", () => {
     createdUsuario = res.body;
   });
 
+  it("deve entrar com o usuário criado", async () => {
+    const res = await request(app).post("/api/usuario/login").send({
+      Email: "teste@gmail.com",
+      Senha: "123456",
+    });
+
+    expect(res.statusCode).toEqual(200);
+  });
+
+  it("não deve entrar com senha inválida", async() => {
+    const res = await request(app).post("/api/usuario/login").send({
+      Email: "teste@gmail.com",
+      Senha: "1234567",
+    });
+
+    expect(res.statusCode).toEqual(401);
+  });
+
+  it("não deve entrar com um email inexistente", async() => {
+    const res = await request(app).post("/api/usuario/login").send({
+      Email: "incorreto@gmail.com",
+      Senha: "123456",
+    });
+
+    expect(res.statusCode).toEqual(404);
+  });
+
+  it("não deve aceitar um email inválido no login", async () => {
+    const res = await request(app).post("/api/usuario/login").send({
+      Email: "string",
+      Senha: "123456",
+    });
+
+    expect(res.statusCode).toEqual(400);
+  });
+
   it("não deve criar um usuário que já exista", async () => {
     const res = await request(app).post("/api/usuario/").send({
       Nome: "Teste",
