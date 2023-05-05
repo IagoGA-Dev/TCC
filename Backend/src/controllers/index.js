@@ -14,24 +14,6 @@ class CrudController {
     });
   }
 
-  // ! Temporáriamente desativado
-  // * Função para logar erros no arquivo log.txt
-  // logErrorToFile(error) {
-  //   fs.appendFile(
-  //     "log.txt",
-  //     `${new Date().toISOString()} - ${error}\n`,
-  //     (err) => {
-  //       if (err) {
-  //         console.error("Erro ao registrar no arquivo:", err);
-  //       }
-  //     }
-  //   );
-  // }
-
-  logErrorToFile(error) {
-    return;
-  }
-
   create(req, res) {
     // Verifica se os campos obrigatórios foram preenchidos
     let missingFields = [];
@@ -77,7 +59,6 @@ class CrudController {
           })
           .catch((err) => {
             console.log(err);
-            this.logErrorToFile(err.message);
 
             // TODO: Arrumar função abaixo.
             // if (err.errors.ValidationErrorItem) {
@@ -259,44 +240,41 @@ class CrudController {
 }
 
 class UsuarioController extends CrudController {
+  // TODO: Implementar JWT
+  // ? Acredito que não seja necessário armazenar o salt no db...
   async login(req, res) {
-    bcrypt = require("bcryptjs");
-    const { email, senha } = req.body;
+    const bcrypt = require("bcrypt");
+    const { Email, Senha } = req.body;
 
-    if (!email || !senha) {
+    if (!Email || !Senha) {
       res.status(400).send({
         code: 1,
         message: "Falha no corpo da requisição",
       });
     }
 
-    const usuario = await this.model.findOne({
-      where: { email },
-    });
-
-    if (!usuario) {
-      res.status(404).send({
-        code: 2,
-        message: "Objeto da requisição não encontrado",
-      });
-    }
-
-    const senhaValida = await bcrypt.compare(senha, usuario.senha);
-
-    if (!senhaValida) {
-      res.status(401).send({
-        code: 3,
-        message: "Senha inválida",
-      });
-    }
-
-    // TODO: Implementar autêncação JWT
-
-    res.session.usuario = usuario;
-
-    res.status(200).send({
-      code: 200,
-      message: "Usuário autenticado com sucesso",
+    this.model.findOne({ where: { email: Email } }).then((data) => {
+      if (data) {
+        bcrypt.compare(Senha, data.Senha).then((result) => {
+          if (result) {
+            res.session.user = data;
+            res.status(200).send({
+              code: 200,
+              message: "Usuário autenticado com sucesso",
+            });
+          } else {
+            res.status(401).send({
+              code: 3,
+              message: "Senha inválida",
+            });
+          }
+        });
+      } else {
+        res.status(404).send({
+          code: 2,
+          message: "Objeto da requisição não encontrado",
+        });
+      }
     });
   }
 }

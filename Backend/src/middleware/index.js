@@ -172,6 +172,21 @@ const validateUsuario = (req, res, next) => {
     return true;
   };
 
+  // * Caso seja uma requisição de login
+  if (req.method === "POST" && req.path === "/login") {
+    const validation = new Validator(req.body, {
+      Email: "required|email",
+      Senha: "required|string|min:6|max:100",
+    });
+    if (validation.fails()) {
+      return res.status(400).send({
+        message: validation.errors.all(),
+      });
+    }
+
+    return next();
+  }
+
   // * Valida regras gerais de validação
   if (req.method === "POST" || req.method === "PUT") {
     const validation = new Validator(req.body, rules);
