@@ -70,4 +70,38 @@ const userData: UserData = {
   school: "IFSP",
 };
 
-export { graphData, cardData, userData };
+// Mensagens
+
+interface Message {
+  avatar: string;
+  name: string;
+  role: string;
+  school: string;
+  message: string;
+}
+
+const messageData: Message[] = [
+  {
+    avatar: "https://picsum.photos/200",
+    name: "John Doe",
+    role: "Moderador",
+    school: "IFSP",
+    message: "Lorem ipsum dolor sit amet",
+  },
+  {
+    avatar: "https://picsum.photos/200",
+    name: "John Doe",
+    role: "Aluno",
+    school: "IFSP",
+    message: "Lorem ipsum dolor sit amet",
+  },
+  {
+    avatar: "https://picsum.photos/200",
+    name: "John Doe",
+    role: "Professor",
+    school: "IFSP",
+    message: "Lorem ipsum dolor sit amet",
+  },
+];
+
+export { graphData, cardData, userData, messageData };
