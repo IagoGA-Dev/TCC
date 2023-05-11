@@ -2,6 +2,10 @@ import Sidebar from "../components/Sidebar";
 import Home from "./Menus/Home";
 import Groups from "./Menus/Groups";
 import { useState } from "react";
+import Calendar from "./Menus/Calendar";
+import Messages from "./Menus/Messages";
+import Tasks from "./Menus/Tasks";
+import Settings from "./Menus/Settings";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -13,10 +17,10 @@ function App() {
           {
             home: <Home />,
             groups: <Groups />,
-            // calendar: <Calendar />,
-            // messages: <Messages />,
-            // tasks: <Tasks />,
-            // settings: <Settings />,
+            calendar: <Calendar />,
+            messages: <Messages />,
+            tasks: <Tasks />,
+            settings: <Settings />
           }[active]
         }
       </div>
