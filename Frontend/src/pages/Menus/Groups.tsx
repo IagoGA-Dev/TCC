@@ -1,6 +1,8 @@
+import TodoText from "../../components/TodoText"
+
 function Groups() {
   return (
-    <div>Groups</div>
+    <TodoText text="Grupos" />
   )
 }
 

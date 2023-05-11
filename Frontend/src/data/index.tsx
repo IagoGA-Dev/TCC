@@ -1,4 +1,6 @@
 import { FaRegEnvelope, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
+import { GoReport } from "react-icons/go";
+import { BiWinkSmile } from "react-icons/bi";
 
 // Dados do gráfico
 interface GraphData {
@@ -42,6 +44,30 @@ const cardData: CardData[] = [
     title: "Tarefas",
     children: <p className="text-xs text-gray-600">Você tem 5 novas tarefas</p>,
   },
+  {
+    Icon: GoReport,
+    title: "Reportes",
+    children: <p className="text-xs text-gray-600 text-center
+    ">Não há novos reportes <BiWinkSmile /></p>,
+  },
+
 ];
 
-export { graphData, cardData };
+// Dados do usuário
+interface UserData {
+  name: string;
+  avatar: string;
+  online: boolean;
+  role?: string;
+  school?: string;
+}
+
+const userData: UserData = {
+  name: "John Doe",
+  avatar: "https://i.pinimg.com/736x/bd/00/28/bd0028886cbe68a675b127cd751dba90.jpg",
+  online: true,
+  role: "Moderador",
+  school: "IFSP",
+};
+
+export { graphData, cardData, userData };
