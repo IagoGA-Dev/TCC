@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { BsPlusCircleDotted } from "react-icons/bs";
-import { messageData } from "../../data";
+import { globalMessagesData, messageData } from "../../data";
 
 interface MessageCardProps {
   avatar: string;
@@ -15,7 +15,6 @@ function MessageCard({
   name,
   role,
   school,
-  message,
 }: MessageCardProps) {
   return (
     <div className="flex flex-row items-center justify-between p-4 bg-white rounded-md shadow-md">
@@ -45,7 +44,7 @@ function Messages() {
     name: string;
     message: string;
   }
-  const [globalMessages, setGlobalMessages] = useState([] as globalMessages[]);
+  const [globalMessages, setGlobalMessages] = useState(globalMessagesData as globalMessages[]);
 
   const [inputMessage, setInputMessage] = useState("");
 
@@ -66,10 +65,8 @@ function Messages() {
         {/* Chat global pra testar a funcionalidade */}
         <div className="flex flex-col flex-grow p-4 bg-white rounded-md shadow-md justify-between">
           <h1 className="text-lg font-semibold text-gray-700">Chat global</h1>
-          {/* Added a div with overflow-y-auto and max-h-96 classes to make the chat box scrollable and fixed height */}
           <div className="flex flex-col flex-grow gap-4 mt-4 overflow-y-auto max-h-96">
             {globalMessages.map((message) => (
-              // Só nome e mensagem. Use imagem temp 200x200 por padrão
               <div className="flex flex-row items-center gap-4">
                 <img
                   className="w-12 h-12 rounded-full"
@@ -102,8 +99,6 @@ function Messages() {
                     { name: "Você", message: inputMessage },
                   ]);
                   setInputMessage("");
-
-                  // Scroll to bottom of chat box
                   const chatBox = document.querySelector(
                     ".flex.flex-col.flex-grow.gap-4.mt-4.overflow-y-auto.max-h-96"
                   ) as HTMLDivElement;

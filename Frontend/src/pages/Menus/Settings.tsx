@@ -2,7 +2,7 @@ import TodoText from "../../components/TodoText"
 
 function Settings() {
   return (
-    <TodoText text="Configuração" />
+    <TodoText text="Settings" />
   )
 }
 

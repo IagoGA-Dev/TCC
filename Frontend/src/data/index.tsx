@@ -18,7 +18,6 @@ const graphData: GraphData[] = [
   { day: "Dom", interactions: 50 },
 ];
 
-
 // Dados dos cards
 interface CardData {
   Icon: any;
@@ -31,7 +30,9 @@ const cardData: CardData[] = [
   {
     Icon: FaRegEnvelope,
     title: "Mensagens",
-    children: <p className="text-xs text-gray-600">Você tem 3 novas mensagens</p>,
+    children: (
+      <p className="text-xs text-gray-600">Você tem 3 novas mensagens</p>
+    ),
     important: true,
   },
   {
@@ -47,10 +48,15 @@ const cardData: CardData[] = [
   {
     Icon: GoReport,
     title: "Reportes",
-    children: <p className="text-xs text-gray-600 text-center
-    ">Não há novos reportes <BiWinkSmile /></p>,
+    children: (
+      <p
+        className="text-xs text-gray-600 text-center
+    "
+      >
+        Não há novos reportes <BiWinkSmile />
+      </p>
+    ),
   },
-
 ];
 
 // Dados do usuário
@@ -64,7 +70,8 @@ interface UserData {
 
 const userData: UserData = {
   name: "John Doe",
-  avatar: "https://i.pinimg.com/736x/bd/00/28/bd0028886cbe68a675b127cd751dba90.jpg",
+  avatar:
+    "https://i.pinimg.com/736x/bd/00/28/bd0028886cbe68a675b127cd751dba90.jpg",
   online: true,
   role: "Moderador",
   school: "IFSP",
@@ -104,4 +111,28 @@ const messageData: Message[] = [
   },
 ];
 
-export { graphData, cardData, userData, messageData };
+interface globalMessages {
+  name: string;
+  message: string;
+}
+
+const globalMessagesData: globalMessages[] = [
+  {
+    name: "John Doe",
+    message: "Lorem ipsum dolor sit amet",
+  },
+  {
+    name: "Jane Doe",
+    message: "Lorem ipsum dolor sit amet",
+  },
+  {
+    name: "John Doe",
+    message: "Lorem ipsum dolor sit amet",
+  },
+  {
+    name: "Jane Doe",
+    message: "Lorem ipsum dolor sit amet",
+  },
+];
+
+export { graphData, cardData, userData, messageData, globalMessagesData };

@@ -17,23 +17,31 @@ function Login() {
 
   function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    api
-      .post("/usuario/login", {
-        Email: e.currentTarget.email.value,
-        Senha: e.currentTarget.password.value,
-      })
-      .then((res) => {
-        if (res.status === 200) {
-          window.location.href = "/";
-          // Define o token no localStorage
-          localStorage.setItem("x-access-token", res.data.token);
-          localStorage.setItem("x-refresh-token", res.data.refreshToken);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        createError({ message: "Email ou senha incorretos!" });
-      });
+
+
+    // Temporariamente para debug
+    if (false) {
+      api
+        .post("/usuario/login", {
+          Email: e.currentTarget.email.value,
+          Senha: e.currentTarget.password.value,
+        })
+        .then((res) => {
+          if (res.status === 200) {
+            window.location.href = "/app";
+            // Define o token no localStorage
+            localStorage.setItem("x-access-token", res.data.token);
+            localStorage.setItem("x-refresh-token", res.data.refreshToken);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+          createError({ message: "Email ou senha incorretos!" });
+        });
+    }
+
+    window.location.href = "/app";
+
   }
 
   return (
