@@ -1,6 +1,9 @@
 import { useState } from "react";
-import { BsPlusCircleDotted } from "react-icons/bs";
+import { BsChatLeftDots, BsFillChatFill, BsFillChatLeftFill, BsMessenger, BsPlusCircleDotted } from "react-icons/bs";
 import { globalMessagesData, messageData } from "../../data";
+import Card from "../../components/Card";
+import MenuTitle from "../../components/MenuTitle";
+import DarkButton from "../../components/DarkButton";
 
 interface MessageCardProps {
   avatar: string;
@@ -49,9 +52,18 @@ function Messages() {
   const [inputMessage, setInputMessage] = useState("");
 
   return (
-    <div className="flex flex-col flex-grow p-4">
-      <h1 className="text-2xl font-bold text-gray-700">Mensagens</h1>
-      <div className="flex flex-col flex-grow gap-4 mt-4">
+    <div className="flex flex-col flex-grow bg-gray-50">
+      <MenuTitle
+        icon={<BsChatLeftDots className="inline-block" />}
+        title="Mensagens"
+      >
+        <DarkButton
+          icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
+          text="Nova mensagem"
+        />
+      </MenuTitle>
+
+      <div className="flex flex-col flex-grow gap-4 mt-4 p-4">
         {messages.map((message) => (
           <MessageCard
             avatar={message.avatar}

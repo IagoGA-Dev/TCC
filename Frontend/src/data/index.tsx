@@ -1,14 +1,11 @@
 import { FaRegEnvelope, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { GoReport } from "react-icons/go";
 import { BiWinkSmile } from "react-icons/bi";
+import { Card, Event, Graph, Message, User, globalMessages, Task } from "./types";
+
 
 // Dados do gráfico
-interface GraphData {
-  day: string;
-  interactions: number;
-}
-
-const graphData: GraphData[] = [
+const graphData: Graph[] = [
   { day: "Seg", interactions: 30 },
   { day: "Ter ", interactions: 20 },
   { day: "Qua", interactions: 30 },
@@ -19,14 +16,7 @@ const graphData: GraphData[] = [
 ];
 
 // Dados dos cards
-interface CardData {
-  Icon: any;
-  title: string;
-  children: any;
-  important?: boolean;
-}
-
-const cardData: CardData[] = [
+const cardData: Card[] = [
   {
     Icon: FaRegEnvelope,
     title: "Mensagens",
@@ -60,15 +50,7 @@ const cardData: CardData[] = [
 ];
 
 // Dados do usuário
-interface UserData {
-  name: string;
-  avatar: string;
-  online: boolean;
-  role?: string;
-  school?: string;
-}
-
-const userData: UserData = {
+const userData: User = {
   name: "John Doe",
   avatar:
     "https://i.pinimg.com/736x/bd/00/28/bd0028886cbe68a675b127cd751dba90.jpg",
@@ -77,16 +59,7 @@ const userData: UserData = {
   school: "IFSP",
 };
 
-// Mensagens
-
-interface Message {
-  avatar: string;
-  name: string;
-  role: string;
-  school: string;
-  message: string;
-}
-
+// Dados das mensagens
 const messageData: Message[] = [
   {
     avatar: "https://picsum.photos/200",
@@ -111,11 +84,7 @@ const messageData: Message[] = [
   },
 ];
 
-interface globalMessages {
-  name: string;
-  message: string;
-}
-
+// Dados das mensagens globais
 const globalMessagesData: globalMessages[] = [
   {
     name: "John Doe",
@@ -135,4 +104,48 @@ const globalMessagesData: globalMessages[] = [
   },
 ];
 
-export { graphData, cardData, userData, messageData, globalMessagesData };
+// Dados dos eventos
+const eventData: Event[] = [
+  {
+    id: 1,
+    title: "Prova de matemática",
+    date: new Date(2023, 4, 17),
+    color: "red",
+  },
+  {
+    id: 2,
+    title: "Apresentação de inglês",
+    date: new Date(2023, 4, 18),
+    color: "blue",
+  },
+  {
+    id: 3,
+    title: "Projeto de ciências",
+    date: new Date(2023, 4, 19),
+    color: "green",
+  },
+];
+
+// Dados das tarefas
+const taskData: Task[] = [
+  {
+    id: 1,
+    title: "Terminar a lição de matemática",
+    description: "Resolver os exercícios 1 a 10 do capítulo 3",
+    status: "todo",
+  },
+  {
+    id: 2,
+    title: "Estudar para a prova de ciências",
+    description: "Revisar as notas e assistir aos vídeos sobre o tema",
+    status: "em desenvolvimento",
+  },
+  {
+    id: 3,
+    title: "Escrever um texto para a aula de inglês",
+    description: "Escolher um tema e escrever pelo menos 500 palavras",
+    status: "terminado",
+  },
+];
+
+export { graphData, cardData, userData, messageData, globalMessagesData, eventData, taskData };
