@@ -1,36 +1,35 @@
+// * Interface do Card
 interface CardProps {
   Icon: any;
   title: string;
   children?: React.ReactNode;
   important?: boolean;
   redirect?: (title: string) => void;
+  route?: string;
   date?: string;
 }
 
+// * Componente principal
+// TODO: Deve ter alguma forma de diminuir o tamanho do código. Mas não quero escrever props.(...) toda hora.
 function Card({
   Icon,
   title,
   children,
   important,
   redirect,
-  date = "hoje",
+  route,
+  date = "hoje", // * Valor padrão
 }: CardProps) {
-  const translate = (name: string) => {
-    const translations: { [key: string]: string } = {
-      Mensagens: "messages",
-      Eventos: "calendar",
-      Tarefas: "tasks",
-      // "Reportes": "reports",
-    };
-    return translations[name];
-  };
+
+  // ! Código em Home vai ficar mais verboso sem o translate.
+  // ! Mas honestamente essa função é um crime contra a programação.
 
   return (
     <div
       className={`flex flex-col gap-2 p-4 rounded-lg bg-gradient-to-r from-white to-gray-100 shadow-md cursor-pointer
         hover:shadow-xl transition duration-200 ease-in-out
       ${important ? "relative" : ""}`}
-      onClick={() => redirect && redirect(translate(title))}
+      onClick={() => (redirect && route) && redirect(route)}
     >
       {important && (
         <div className="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500"></div>

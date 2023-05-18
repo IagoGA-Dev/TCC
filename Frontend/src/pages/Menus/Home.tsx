@@ -1,3 +1,5 @@
+// TODO: É necessário fazer um redesign dessa interface para ficar de acordo com as outras (usando MenuTitle e DarkButton).
+
 import Card from "../../components/Card";
 import Chart from "../../components/Graph";
 import { useState } from "react";
@@ -12,6 +14,7 @@ import { AiOutlineArrowRight } from "react-icons/ai";
 import { cardData, graphData } from "../../data";
 import { userData } from "../../data";
 import DarkButton from "../../components/DarkButton";
+import MenuTitle from "../../components/MenuTitle";
 
 // Gera os cards
 function CardList({ redirect }: HomeProps) {
@@ -24,6 +27,7 @@ function CardList({ redirect }: HomeProps) {
           title={card.title}
           important={card.important}
           redirect={redirect}
+          route={card.route}
         >
           {card.children}
         </Card>
@@ -45,14 +49,6 @@ function NewButton() {
 
   return (
     <div>
-      {/* Botão de novo */}
-      {/* <button
-        className="flex flex-row items-center gap-2 bg-gray-100 px-4 py-2 rounded-md"
-        onClick={() => setPopup(!popup)}
-      >
-        <BsPlusCircleDotted className="w-6 h-6 text-gray-700" />
-        <span className="text-gray-700">Novo</span>
-      </button> */}
       <DarkButton
         icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
         text="Novo"
@@ -81,27 +77,44 @@ function NewButton() {
 }
 
 // Bem vindo inicial
-function Header({ currentTime = new Date() }) {
+// function Header({ currentTime = new Date() }) {
+//   return (
+//     <div className="flex flex-row items-center justify-between p-6">
+//       <div className="flex flex-row items-center gap-4">
+//         <img
+//           className="w-12 h-12 rounded-full"
+//           src={userData.avatar}
+//           alt="avatar"
+//         />
+//         <div className="flex flex-col">
+//           <h1 className="text-2xl font-bold text-gray-700">
+//             Bem vindo, {userData.name}
+//           </h1>
+//           <h2 className="text-lg font-semibold text-gray-500">
+//             {userData.role} - {userData.school} -{" "}
+//             {currentTime.toLocaleDateString()}
+//           </h2>
+//         </div>
+//       </div>
+//       <NewButton />
+//     </div>
+//   );
+// }
+
+function Header() {
   return (
-    <div className="flex flex-row items-center justify-between p-6">
-      <div className="flex flex-row items-center gap-4">
+    <MenuTitle
+      icon={
         <img
-          className="w-12 h-12 rounded-full"
+          className="w-8 h-8 rounded-full"
           src={userData.avatar}
           alt="avatar"
         />
-        <div className="flex flex-col">
-          <h1 className="text-2xl font-bold text-gray-700">
-            Bem vindo, {userData.name}
-          </h1>
-          <h2 className="text-lg font-semibold text-gray-500">
-            {userData.role} - {userData.school} -{" "}
-            {currentTime.toLocaleDateString()}
-          </h2>
-        </div>
-      </div>
+      }
+      title={`Bem vindo, ${userData.name}`}
+    >
       <NewButton />
-    </div>
+    </MenuTitle>
   );
 }
 
@@ -113,7 +126,7 @@ function Home({ redirect }: HomeProps) {
   return (
     <div>
       <Header />
-      <div className="flex flex-col flex-1 p-6 gap-6">
+      <div className="flex flex-col flex-1 p-6 gap-6 bg-gray-50">
         <CardList redirect={redirect} />
         <Card Icon={FaChartBar} title="Gráfico de interações">
           <Chart data={graphData} widthP={100} height={300} />

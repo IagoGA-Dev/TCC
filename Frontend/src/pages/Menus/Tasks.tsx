@@ -1,5 +1,5 @@
 // TODO(ironicamente): Tranformar o modal em um componente reutilizável.
-
+// TODO: Model está bem quebrado. Vou desabilitar temporariamente até arrumar. Deve ser algo com o estado. O componente em si funciona bem.
 import { useState } from "react";
 import {
   BsCardChecklist,
@@ -16,13 +16,20 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { taskData } from "../../data";
 import { Task } from "../../data/types";
 
-// Modal
+// * Modal
+// TODO: Passar para um arquivo separado posteriormente. Quero usar no calendário para adicionar novos eventos. 
+// TODO: Possívelmente no grupo também se o componente for reutilizável o suficiente.
+// ? Só registrando que adicionei os tipos de acordo com os que apareceram no typescript, pode ser necessário alterar alguns para any caso transformado em componente.
 interface ModalProps {
   title: string;
   showModal: boolean;
-  setShowModal: any;
-  children: any;
-  buttons: any;
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+  children: React.ReactNode;
+  buttons: {
+    icon: React.ReactNode;
+    text: string;
+    onClick: () => void;
+  }[];
 }
 
 function Modal({
@@ -75,23 +82,23 @@ function Modal({
 }
 
 function Tasks() {
-  // Estado para as tarefas
+  // * Estado para as tarefas
   const [tasks, setTasks] = useState<Task[]>(taskData);
 
-  // Estado para a visibilidade do modal e os valores dos inputs
+  //*  Estado para a visibilidade do modal e os valores dos inputs
   const [showModal, setShowModal] = useState(false);
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
   const [statusInput, setStatusInput] = useState<Task["status"]>("todo");
 
-  // Estado para a tarefa selecionada
+  // * Estado para a tarefa selecionada
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
-  // Função para adicionar uma nova tarefa ou editar uma existente
+  // * Função para adicionar uma nova tarefa ou editar uma existente
   const saveTask = () => {
     if (!titleInput || !descriptionInput || !statusInput) return;
     if (selectedTask) {
-      // Editar tarefa existente
+      // * Editar tarefa existente
       setTasks(
         tasks.map((task) =>
           task.id === selectedTask.id
@@ -105,7 +112,7 @@ function Tasks() {
         )
       );
     } else {
-      // Adicionar nova tarefa
+      // * Adicionar nova tarefa
       setTasks([
         ...tasks,
         {
@@ -123,7 +130,7 @@ function Tasks() {
     setSelectedTask(null);
   };
 
-  // Função para deletar uma tarefa
+  // * Função para deletar uma tarefa
   const deleteTask = () => {
     if (!selectedTask) return;
     setTasks(tasks.filter((task) => task.id !== selectedTask.id));
@@ -134,7 +141,7 @@ function Tasks() {
     setSelectedTask(null);
   };
 
-  // Função para selecionar uma tarefa e mostrar seus detalhes
+  // * Função para selecionar uma tarefa e mostrar seus detalhes
   const selectTask = (task: Task) => {
     setSelectedTask(task);
     setShowModal(true);
@@ -143,7 +150,7 @@ function Tasks() {
     setStatusInput(task.status);
   };
 
-  // Renderizar o componente da tarefa
+  // * Renderizar o componente da tarefa
   return (
     <div className="flex flex-col h-screen">
       {/* Cabeçalho */}

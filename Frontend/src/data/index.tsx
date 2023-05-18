@@ -1,7 +1,7 @@
 import { FaRegEnvelope, FaRegCalendarAlt, FaRegClock } from "react-icons/fa";
 import { GoReport } from "react-icons/go";
 import { BiWinkSmile } from "react-icons/bi";
-import { Card, Event, Graph, Message, User, globalMessages, Task } from "./types";
+import { Card, Event, Graph, Message, User, Task } from "./types";
 
 
 // Dados do gráfico
@@ -24,16 +24,19 @@ const cardData: Card[] = [
       <p className="text-xs text-gray-600">Você tem 3 novas mensagens</p>
     ),
     important: true,
+    route: "messages",
   },
   {
     Icon: FaRegCalendarAlt,
     title: "Eventos",
     children: <p className="text-xs text-gray-600">Você tem 2 novos eventos</p>,
+    route: "calendar",
   },
   {
     Icon: FaRegClock,
     title: "Tarefas",
     children: <p className="text-xs text-gray-600">Você tem 5 novas tarefas</p>,
+    route: "tasks",
   },
   {
     Icon: GoReport,
@@ -84,26 +87,6 @@ const messageData: Message[] = [
   },
 ];
 
-// Dados das mensagens globais
-const globalMessagesData: globalMessages[] = [
-  {
-    name: "John Doe",
-    message: "Lorem ipsum dolor sit amet",
-  },
-  {
-    name: "Jane Doe",
-    message: "Lorem ipsum dolor sit amet",
-  },
-  {
-    name: "John Doe",
-    message: "Lorem ipsum dolor sit amet",
-  },
-  {
-    name: "Jane Doe",
-    message: "Lorem ipsum dolor sit amet",
-  },
-];
-
 // Dados dos eventos
 const eventData: Event[] = [
   {
@@ -122,7 +105,7 @@ const eventData: Event[] = [
     id: 3,
     title: "Projeto de ciências",
     date: new Date(2023, 4, 19),
-    color: "green",
+    color: "yellow",
   },
 ];
 
@@ -148,4 +131,4 @@ const taskData: Task[] = [
   },
 ];
 
-export { graphData, cardData, userData, messageData, globalMessagesData, eventData, taskData };
+export { graphData, cardData, userData, messageData, eventData, taskData };

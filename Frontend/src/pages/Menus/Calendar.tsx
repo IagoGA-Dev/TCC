@@ -11,40 +11,62 @@ import { eventData } from "../../data";
 import { Event } from "../../data/types";
 
 function Calendar() {
+  // * Estados
+  // * Mês e ano atual.
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
 
+  // * Eventos do calendário.
+  // * É referente a todos os eventos do calendário.
+  // * Não só os eventos do mês atual.
   const [events] = useState(eventData);
 
+  // * Data e evento selecionado.
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState({} as Event);
 
+
+  // * Obtém o número de dias em um mês.
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
+
+  // * Obtém o dia da semana do primeiro dia do mês.
+  // * Por exemplo, maio de 2023 começa em uma segunda-feira.
   const getFirstDayOfMonth = (month: number, year: number) => {
     return new Date(year, month, 1).getDay();
   };
+
+  // * Obtém o nome do mês em português.
   const getMonthName = (month: number) => {
     return new Date(0, month).toLocaleString("pt-BR", { month: "long" });
   };
+
+  // * Altera o mês do calendário.
+  // * Delta é a diferença entre o mês atual e o mês que será alterado.
   const changeMonth = (delta: number) => {
+    // * Se o mês for menor que 0, então o mês anterior é dezembro do ano anterior.
     if (month + delta < 0) {
       setMonth(11);
       setYear(year - 1);
+    // * Se o mês for maior que 11, então o mês seguinte é janeiro do ano seguinte.
     } else if (month + delta > 11) {
       setMonth(0);
       setYear(year + 1);
+    // * Caso contrário, apenas altera o mês.
     } else {
       setMonth(month + delta);
     }
   };
 
+  // * Seleciona uma data no calendário.
   const selectDate = (date: Date) => {
     setSelectedDate(date);
     setSelectedEvent({} as Event);
   };
 
+  // * Seleciona um evento no calendário.
+  // * OBS. Menu lateral.
   const selectEvent = (event: any) => {
     setSelectedEvent(event);
   };
@@ -79,8 +101,8 @@ function Calendar() {
           {/* Corpo do calendário */}
           <div className="grid grid-cols-7 gap-1 p-4">
             {/* Renderizando os dias da semana */}
-            {["D", "S", "T", "Q", "Q", "S", "S"].map((day) => (
-              <div key={day} className="text-center text-gray-500">
+            {["D", "S", "T", "Q", "Q", "S", "S"].map((day, index) => (
+              <div key={index} className="text-center text-gray-500">
                 {day}
               </div>
             ))}
@@ -122,9 +144,14 @@ function Calendar() {
                           event.date.getFullYear() === year
                       )
                       .map((event) => (
+                        // Algum erro estranho não renderiza a cor do evento corretamente. Investigar.
+                        // ! Pelo visto é um erro com o próprio tailwindcss.
+                        // ! Uma alternativa é adicionar um switch case para cada cor de evento.
+                        // ! O que é uma dor de cabeça... mas não impossível.
+                        // ! Talvez renderizando os componentes primeiro e depois adicionando as cores.
                         <div
-                          key={event.id}
-                          className={`w-2 h-2 rounded-full bg-${event.color}-500`}
+                          key={`${event.id}-${event.date}`}
+                          className={`w-2 h-2 rounded-full bg-red-400`}
                         ></div>
                       ))}
                   </div>
@@ -153,26 +180,26 @@ function Calendar() {
                   // Evento renderizado dentro da lista
                   <div
                     key={event.id}
-                    className={`flex flex-row items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-blue-100 border transition-all ${ 
+                    className={`flex flex-row items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-blue-100 border transition-all ${
                       selectedEvent && selectedEvent.id === event.id
                         ? `border-blue-300 bg-blue-100 hover:bg-blue-200`
                         : ""
                     }`}
                     onClick={() => selectEvent(event)}
                   >
-                    <div
-                      className={`w-4 h-4 rounded-full ${event.color}`}
-                    ></div>
                     <span className="text-gray-700">
                       {/* Renderiza cor do evento */}
-                      <div className={`w-2 h-2 rounded-full bg-${event.color}-500 inline-block mr-5`} />
-                      {event.title}</span>
+                      {/* //! Exatamente o mesmo problema que o anterior. */}
+                      <div
+                        className={`w-2 h-2 ml-1 rounded-full bg-red-400 inline-block mr-5`}
+                      />
+
+                      {event.title}
+                    </span>
                   </div>
                 ))
             ) : (
-              <div className="text-center text-gray-500">
-                Nenhum evento
-              </div>
+              <div className="text-center text-gray-500">Nenhum evento</div>
             )}
           </div>
         </div>

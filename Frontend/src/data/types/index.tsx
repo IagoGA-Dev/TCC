@@ -10,6 +10,7 @@ interface Card {
   title: string;
   children: any;
   important?: boolean;
+  route?: string;
 }
 
 // Dados do usuário
@@ -30,12 +31,6 @@ interface Message {
   message: string;
 }
 
-// Mensagens globais
-interface globalMessages {
-  name: string;
-  message: string;
-}
-
 // Eventos
 interface Event {
   id: number;
@@ -52,4 +47,4 @@ interface Task {
   status: "todo" | "em desenvolvimento" | "terminado";
 }
 
-export type { Graph, Card, User, Message, globalMessages, Event, Task };
+export type { Graph, Card, User, Message, Event, Task };
