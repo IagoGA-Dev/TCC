@@ -43,23 +43,21 @@ function Modal({
     <>
       {/* Fundo escuro */}
       <div
-        className={`${
-          showModal ? "flex" : "hidden"
-        } fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 z-50`}
+        className={`${showModal ? "flex" : "hidden"
+          } fixed top-0 left-0 w-screen h-screen bg-black bg-opacity-50 z-50`}
         onClick={() => setShowModal(false)}
       ></div>
 
       {/* Modal */}
       <div
-        className={`${
-          showModal ? "flex-col" : "hidden"
-        } fixed p-5 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg z-50`}
+        className={`${showModal ? "flex-col" : "hidden"
+          } fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-lg z-50 shadow-lg`}
       >
         {/* Cabeçalho */}
         <div className="flex flex-row justify-between items-center w-full px-4 py-2 border-b">
           <h1 className="text-lg font-semibold">{title}</h1>
           <BsX
-            className="text-xl cursor-pointer"
+            className="text-xl cursor-pointer hover:text-gray-500 transition-colors duration-200"
             onClick={() => setShowModal(false)}
           />
         </div>
@@ -67,7 +65,7 @@ function Modal({
         <div className="flex flex-col w-full p-4">{children}</div>
         {/* Rodapé */}
         <div className="flex flex-row justify-end items-center w-full p-4 border-t gap-5">
-          {buttons.map((button: any, index: number) => (
+          {buttons.map((button: { icon: React.ReactNode; text: string; onClick: () => void }, index: number) => (
             <DarkButton
               key={index}
               icon={button.icon}
@@ -103,11 +101,11 @@ function Tasks() {
         tasks.map((task) =>
           task.id === selectedTask.id
             ? {
-                ...task,
-                title: titleInput,
-                description: descriptionInput,
-                status: statusInput,
-              }
+              ...task,
+              title: titleInput,
+              description: descriptionInput,
+              status: statusInput,
+            }
             : task
         )
       );
@@ -131,15 +129,15 @@ function Tasks() {
   };
 
   // * Função para deletar uma tarefa
-  const deleteTask = () => {
-    if (!selectedTask) return;
-    setTasks(tasks.filter((task) => task.id !== selectedTask.id));
-    setShowModal(false);
-    setTitleInput("");
-    setDescriptionInput("");
-    setStatusInput("todo");
-    setSelectedTask(null);
-  };
+  // const deleteTask = () => {
+  //   if (!selectedTask) return;
+  //   setTasks(tasks.filter((task) => task.id !== selectedTask.id));
+  //   setShowModal(false);
+  //   setTitleInput("");
+  //   setDescriptionInput("");
+  //   setStatusInput("todo");
+  //   setSelectedTask(null);
+  // };
 
   // * Função para selecionar uma tarefa e mostrar seus detalhes
   const selectTask = (task: Task) => {
