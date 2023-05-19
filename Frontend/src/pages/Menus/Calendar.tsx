@@ -49,11 +49,11 @@ function Calendar() {
     if (month + delta < 0) {
       setMonth(11);
       setYear(year - 1);
-    // * Se o mês for maior que 11, então o mês seguinte é janeiro do ano seguinte.
+      // * Se o mês for maior que 11, então o mês seguinte é janeiro do ano seguinte.
     } else if (month + delta > 11) {
       setMonth(0);
       setYear(year + 1);
-    // * Caso contrário, apenas altera o mês.
+      // * Caso contrário, apenas altera o mês.
     } else {
       setMonth(month + delta);
     }
@@ -67,7 +67,7 @@ function Calendar() {
 
   // * Seleciona um evento no calendário.
   // * OBS. Menu lateral.
-  const selectEvent = (event: any) => {
+  const selectEvent = (event: Event) => {
     setSelectedEvent(event);
   };
 
@@ -78,7 +78,6 @@ function Calendar() {
         <DarkButton
           icon={<AiOutlinePlus />}
           text="Novo evento"
-          onClick={() => {}}
         />
       </MenuTitle>
       {/* Corpo */}
@@ -121,13 +120,12 @@ function Calendar() {
               .map((_, i) => (
                 <div
                   key={i}
-                  className={`h-16 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-all ${
-                    selectedDate.getDate() === i + 1 &&
+                  className={`h-16 flex flex-col items-center justify-center cursor-pointer hover:bg-gray-200 transition-all ${selectedDate.getDate() === i + 1 &&
                     selectedDate.getMonth() === month &&
                     selectedDate.getFullYear() === year
-                      ? "bg-blue-100 border border-blue-300 hover:bg-blue-200"
-                      : ""
-                  }`}
+                    ? "bg-blue-100 border border-blue-300 hover:bg-blue-200"
+                    : ""
+                    }`}
                   onClick={() => selectDate(new Date(year, month, i + 1))}
                 >
                   {/* Número do dia */}
@@ -143,17 +141,30 @@ function Calendar() {
                           event.date.getMonth() === month &&
                           event.date.getFullYear() === year
                       )
-                      .map((event) => (
-                        // Algum erro estranho não renderiza a cor do evento corretamente. Investigar.
-                        // ! Pelo visto é um erro com o próprio tailwindcss.
-                        // ! Uma alternativa é adicionar um switch case para cada cor de evento.
-                        // ! O que é uma dor de cabeça... mas não impossível.
-                        // ! Talvez renderizando os componentes primeiro e depois adicionando as cores.
-                        <div
-                          key={`${event.id}-${event.date}`}
-                          className={`w-2 h-2 rounded-full bg-red-400`}
-                        ></div>
-                      ))}
+                      .map((event) => {
+                        let colorClass = "";
+                        // * Só essas cores são permitidas
+                        // * Tenho que fazer isso pois o Tailwind não aceita variáveis no className
+                        switch (event.color) {
+                          case "blue":
+                            colorClass = "bg-blue-500";
+                            break;
+                          case "green":
+                            colorClass = "bg-green-500";
+                            break;
+                          case "yellow":
+                            colorClass = "bg-yellow-500";
+                            break;
+                          default:
+                            colorClass = "bg-red-500";
+                        }
+                        return (
+                          <div
+                            key={`${event.id}-${event.date}`}
+                            className={`w-2 h-2 rounded-full ${colorClass}`}
+                          ></div>
+                        );
+                      })}
                   </div>
                 </div>
               ))}
@@ -180,20 +191,29 @@ function Calendar() {
                   // Evento renderizado dentro da lista
                   <div
                     key={event.id}
-                    className={`flex flex-row items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-blue-100 border transition-all ${
-                      selectedEvent && selectedEvent.id === event.id
+                    className={`flex flex-row items-center gap-2 p-2 rounded-md cursor-pointer hover:bg-blue-100 border transition-all ${selectedEvent && selectedEvent.id === event.id
                         ? `border-blue-300 bg-blue-100 hover:bg-blue-200`
                         : ""
-                    }`}
+                      }`}
                     onClick={() => selectEvent(event)}
                   >
                     <span className="text-gray-700">
                       {/* Renderiza cor do evento */}
-                      {/* //! Exatamente o mesmo problema que o anterior. */}
                       <div
-                        className={`w-2 h-2 ml-1 rounded-full bg-red-400 inline-block mr-5`}
+                        className={`w-2 h-2 ml-1 rounded-full bg-${(() => {
+                            switch (event.color) {
+                              case "blue":
+                                return "blue-500";
+                              case "green":
+                                return "green-500";
+                              case "yellow":
+                                return "yellow-500";
+                              default:
+                                return "red-500";
+                            }
+                          })()
+                          } inline-block mr-5`}
                       />
-
                       {event.title}
                     </span>
                   </div>

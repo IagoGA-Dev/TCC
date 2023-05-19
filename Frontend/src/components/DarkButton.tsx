@@ -9,7 +9,7 @@ import React from "react";
 </button>; */}
 
 interface DarkButtonProps {
-  icon: any;
+  icon: React.ReactNode;
   text: string;
   onClick?: () => void;
 }
