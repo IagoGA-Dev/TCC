@@ -71,7 +71,7 @@ function ChatMessage({ message, type, id, onDelete, onReport }: ChatMessageProps
   return (
     <div className="flex items-start mb-4 relative">
       <img
-        src="https://upload.wikimedia.org/wikipedia/en/6/60/KyubeyMadokaMagica.png"
+        src="https://picsum.photos/200"
         alt="Avatar do usuário"
         className="w-10 h-10 rounded-full mr-4"
       />
