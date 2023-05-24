@@ -6,13 +6,19 @@ import { useState } from "react";
 import { BsChatLeftDots, BsPlusCircleDotted } from "react-icons/bs";
 import { messageData } from "../../data";
 import { Message } from "../../data/types";
-import Card from "../../components/Card";
 import MenuTitle from "../../components/MenuTitle";
 import DarkButton from "../../components/DarkButton";
+import Card from "../../components/Card";
 
 function MessageCard({ avatar, name, role, school }: Message) {
   return (
-    <div className="flex flex-row items-center justify-between p-4 bg-white rounded-md shadow-md">
+    <Card
+      className="p-4"
+      applyDefaultClassNames={false}
+    >
+      {/* Não é como eu queria mas não encontro o erro em Card... */}
+      <div className="flex flex-row">
+      {/* Avatar, nome e role */}
       <div className="flex flex-row items-center gap-4">
         <img className="w-12 h-12 rounded-full" src={avatar} alt="avatar" />
         <div className="flex flex-col">
@@ -22,13 +28,15 @@ function MessageCard({ avatar, name, role, school }: Message) {
           </h2>
         </div>
       </div>
-      <div className="flex flex-row items-center gap-4">
-        <button className="flex flex-row items-center gap-2 bg-gray-100 px-4 py-2 rounded-md">
-          <BsPlusCircleDotted className="w-6 h-6 text-gray-700" />
-          <span className="text-gray-700">Novo</span>
-        </button>
+      {/* Botão de ação */}
+      <div className="flex flex-row items-center gap-4 ml-auto">
+        <DarkButton
+          icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
+          text="Novo"
+        />
       </div>
-    </div>
+      </div>
+    </Card>
   );
 }
 

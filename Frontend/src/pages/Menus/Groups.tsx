@@ -15,14 +15,17 @@ interface GroupCardProps {
   image: string;
   members: number;
   date: string;
+  redirect: (active: string) => void;
 }
 
-function GroupCard({ id, name, description, image, members, date }: GroupCardProps) {
+function GroupCard({ id, name, description, image, members, date, redirect }: GroupCardProps) {
   return (
     <Card
       title={`#${addZeros(id)}`}
       Icon={() => <div></div>}
       date={""}
+      redirect={redirect}
+      route={"/chat"}
     >
       <div className="flex flex-col items-center">
         <img
@@ -41,7 +44,7 @@ function GroupCard({ id, name, description, image, members, date }: GroupCardPro
   );
 }
 
-function CreateMockGroup({ id }: { id: number }) {
+function CreateMockGroup({ id, redirect }: { id: number, redirect: (active: string) => void }) {
   return (
     <GroupCard
       id={id}
@@ -50,11 +53,12 @@ function CreateMockGroup({ id }: { id: number }) {
       image="https://picsum.photos/200"
       members={id}
       date="01/01/2021"
+      redirect={redirect}
     />
   );
 }
 
-function Groups() {
+function Groups({ redirect }: { redirect: (active: string) => void }) {
   // * Estado para a barra de busca
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -92,7 +96,7 @@ function Groups() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4">
           {filteredGroups.map((group) => (
             <div key={group}>
-              <CreateMockGroup id={group} />
+              <CreateMockGroup id={group} redirect={redirect} />
             </div>
           ))}
         </div>

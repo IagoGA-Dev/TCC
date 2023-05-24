@@ -3,7 +3,6 @@ import { GoReport } from "react-icons/go";
 import { BiWinkSmile } from "react-icons/bi";
 import { Card, Event, Graph, Message, User, Task } from "./types";
 
-
 // Dados do gráfico
 const graphData: Graph[] = [
   { day: "Seg", interactions: 30 },
@@ -46,7 +45,7 @@ const cardData: Card[] = [
         className="text-xs text-gray-600 text-center
     "
       >
-        Não há novos reportes <BiWinkSmile />
+        Não há novos reportes <BiWinkSmile className="inline-block" />
       </p>
     ),
   },

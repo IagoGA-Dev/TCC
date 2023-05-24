@@ -1,16 +1,23 @@
+import React from 'react';
+import { AiOutlineCheckCircle } from 'react-icons/ai';
+
+// Define the type for Icon
+type IconType = React.ElementType<typeof AiOutlineCheckCircle>;
+
 // * Interface do Card
 interface CardProps {
-  Icon: any;
-  title: string;
+  Icon?: IconType;
+  title?: string;
   children?: React.ReactNode;
   important?: boolean;
   redirect?: (title: string) => void;
   route?: string;
   date?: string;
+  className?: string;
+  applyDefaultClassNames?: boolean;
 }
 
 // * Componente principal
-// TODO: Deve ter alguma forma de diminuir o tamanho do código. Mas não quero escrever props.(...) toda hora.
 function Card({
   Icon,
   title,
@@ -18,29 +25,32 @@ function Card({
   important,
   redirect,
   route,
-  date = "hoje", // * Valor padrão
+  date,
+  className,
+  applyDefaultClassNames = true,
 }: CardProps) {
 
-  // ! Código em Home vai ficar mais verboso sem o translate.
-  // ! Mas honestamente essa função é um crime contra a programação.
-
   return (
+    // ? Da para alterar o estilo do icone de importante posteriormente para deixar mais visivel.
     <div
-      className={`flex flex-col gap-2 p-4 rounded-lg bg-gradient-to-r from-white to-gray-100 shadow-md cursor-pointer
+      className={`
+        rounded-lg bg-gradient-to-r from-white to-gray-100 shadow-md
         hover:shadow-xl transition duration-200 ease-in-out
-      ${important ? "relative" : ""}`}
+        ${applyDefaultClassNames ? `flex flex-col gap-2 p-4 cursor-pointer` : ''}
+        ${className ? className : ""}
+        ${important ? `relative` : ""}
+      `}
       onClick={() => (redirect && route) && redirect(route)}
     >
       {important && (
-        <div className="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500"></div>
+        <div className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-500"></div>
       )}
       <div className="flex justify-between items-center">
-        <Icon className="w-5 h-5 text-gray-600" />
-        <p className="text-xs text-gray-600">{date}</p>
+        {Icon && <Icon className="w-5 h-5 text-gray-600" />}
+        {date && <p className="text-xs text-gray-600">{date}</p>}
       </div>
       <div className="flex flex-col gap-2">
-        <p className="text-xl font-bold">{title}</p>
-        {/* <p className="text-xs text-gray-600">{value}</p> */}
+        {title && <p className="text-xl font-bold">{title}</p>}
         {children}
       </div>
     </div>

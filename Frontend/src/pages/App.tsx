@@ -6,6 +6,7 @@ import Calendar from "./Menus/Calendar";
 import Messages from "./Menus/Messages";
 import Tasks from "./Menus/Tasks";
 import Settings from "./Menus/Settings";
+import Chat from "./Menus/Chat";
 
 function App() {
   const [active, setActive] = useState("home");
@@ -17,6 +18,7 @@ function App() {
       "messages",
       "tasks",
       "settings",
+      "chat"
     ];
     if (validNames.includes(name)) {
       setActive(name);
@@ -29,11 +31,12 @@ function App() {
         {
           {
             home: <Home redirect={redirect} />,
-            groups: <Groups />,
+            groups: <Groups redirect={redirect} />, 
             calendar: <Calendar />,
             messages: <Messages />,
             tasks: <Tasks />,
             settings: <Settings />,
+            chat: <Chat />
           }[active]
         }
       </div>
