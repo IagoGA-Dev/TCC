@@ -9,6 +9,7 @@ export default {
         'montserrat': ['Montserrat', 'sans-serif'],
         'merriweather': ['Merriweather', 'serif'],
         'poppins': ['Poppins', 'sans-serif'],
+        'opendyslexic': ['OpenDyslexic', 'sans-serif'],
       },
       colors: {
         'primary': '#FFD48E',
@@ -17,5 +18,6 @@ export default {
     },
   },
   plugins: [],
+  darkMode: 'class',
 }
 

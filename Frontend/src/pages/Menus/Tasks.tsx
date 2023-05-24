@@ -6,13 +6,13 @@ import {
   BsCheck,
   BsListTask,
   BsPencil,
+  BsPlusCircleDotted,
   BsTrash,
   BsX,
 } from "react-icons/bs";
 import Card from "../../components/Card";
 import MenuTitle from "../../components/MenuTitle";
 import DarkButton from "../../components/DarkButton";
-import { AiOutlinePlus } from "react-icons/ai";
 import { taskData } from "../../data";
 import { Task } from "../../data/types";
 import Modal from "../../components/Modal";
@@ -91,12 +91,12 @@ function Tasks() {
     <div className="flex flex-col h-screen">
       {/* Cabeçalho */}
       <MenuTitle
-        icon={<BsListTask className="inline-block mr-2" />}
+        icon={<BsListTask className="inline-block" />}
         title="Tarefas"
       >
         <DarkButton
-          icon={<AiOutlinePlus className="inline mr-2" />}
-          text="Nova tarefa"
+          icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
+          text="Nova Tarefa"
           onClick={() => setShowModal(true)}
         />
       </MenuTitle>

@@ -76,31 +76,6 @@ function NewButton() {
   );
 }
 
-// Bem vindo inicial
-// function Header({ currentTime = new Date() }) {
-//   return (
-//     <div className="flex flex-row items-center justify-between p-6">
-//       <div className="flex flex-row items-center gap-4">
-//         <img
-//           className="w-12 h-12 rounded-full"
-//           src={userData.avatar}
-//           alt="avatar"
-//         />
-//         <div className="flex flex-col">
-//           <h1 className="text-2xl font-bold text-gray-700">
-//             Bem vindo, {userData.name}
-//           </h1>
-//           <h2 className="text-lg font-semibold text-gray-500">
-//             {userData.role} - {userData.school} -{" "}
-//             {currentTime.toLocaleDateString()}
-//           </h2>
-//         </div>
-//       </div>
-//       <NewButton />
-//     </div>
-//   );
-// }
-
 function Header() {
   return (
     <MenuTitle

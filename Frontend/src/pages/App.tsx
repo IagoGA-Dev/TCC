@@ -30,7 +30,8 @@ function App() {
       <div className="flex flex-col flex-grow bg-gray-100 overflow-y-scroll">
         {
           {
-            home: <Home redirect={redirect} />,
+            // home: <Home redirect={redirect} />,
+            home: <Chat />,
             groups: <Groups redirect={redirect} />, 
             calendar: <Calendar />,
             messages: <Messages />,

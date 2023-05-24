@@ -51,7 +51,7 @@ function Messages() {
       >
         <DarkButton
           icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
-          text="Nova mensagem"
+          text="Nova Mensagem"
         />
       </MenuTitle>
 

@@ -2,6 +2,8 @@ import { useState } from "react";
 import Card from "../../components/Card";
 import MenuTitle from "../../components/MenuTitle";
 import { MdOutlineGroups } from "react-icons/md";
+import DarkButton from "../../components/DarkButton";
+import { BsPlusCircleDotted } from "react-icons/bs";
 
 function addZeros(number: number) {
   const zeros = "000";
@@ -79,7 +81,10 @@ function Groups({ redirect }: { redirect: (active: string) => void }) {
         icon={<MdOutlineGroups className="inline-block" />}
         title="Grupos"
       >
-        <div></div>
+        <DarkButton
+          icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
+          text="Novo Grupo"
+        />
       </MenuTitle>
       <div className="py-9 bg-gray-50">
         {/* Barra de busca */}

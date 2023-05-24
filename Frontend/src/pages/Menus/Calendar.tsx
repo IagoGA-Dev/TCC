@@ -1,8 +1,7 @@
 //TODO: Melhorar posteriormente o sombreamento da sidebar nessa página...
 //TODO: Investigar o erro importunante do React sobre chave única no console.
 import { useState } from "react";
-import { BsCalendar } from "react-icons/bs";
-import { AiOutlinePlus } from "react-icons/ai";
+import { BsCalendar, BsPlusCircleDotted } from "react-icons/bs";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import MenuTitle from "../../components/MenuTitle";
@@ -76,8 +75,8 @@ function Calendar() {
       {/* Cabeçalho */}
       <MenuTitle icon={<BsCalendar />} title="Calendário">
         <DarkButton
-          icon={<AiOutlinePlus />}
-          text="Novo evento"
+          icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
+          text="Novo Evento"
         />
       </MenuTitle>
       {/* Corpo */}
