@@ -30,7 +30,15 @@ function ChatHeader() {
   );
 }
 
-function ChatMessageActions({ id, onDelete, onReport }: { id: number, onDelete: (id: number) => void, onReport: (id: number) => void }) {
+function ChatMessageActions({
+  id,
+  onDelete,
+  onReport,
+}: {
+  id: number;
+  onDelete: (id: number) => void;
+  onReport: (id: number) => void;
+}) {
   const [showActions, setShowActions] = useState(false);
 
   return (
@@ -43,11 +51,17 @@ function ChatMessageActions({ id, onDelete, onReport }: { id: number, onDelete: 
       </button>
       {showActions && (
         <div className="flex flex-col absolute top-0 right-0 mt-8 mr-2 bg-white border border-gray-300 rounded-lg p-2">
-          <button className="flex items-center text-gray-600 text-sm hover:text-red-500" onClick={() => onDelete(id)}>
+          <button
+            className="flex items-center text-gray-600 text-sm hover:text-red-500"
+            onClick={() => onDelete(id)}
+          >
             <FiTrash2 className="mr-2" />
             <span>Delete</span>
           </button>
-          <button className="flex items-center text-gray-600 text-sm hover:text-red-500" onClick={() => onReport(id)}>
+          <button
+            className="flex items-center text-gray-600 text-sm hover:text-red-500"
+            onClick={() => onReport(id)}
+          >
             <FiFlag className="mr-2" />
             <span>Report</span>
           </button>
@@ -57,7 +71,13 @@ function ChatMessageActions({ id, onDelete, onReport }: { id: number, onDelete: 
   );
 }
 
-function ChatMessage({ message, type, id, onDelete, onReport }: ChatMessageProps) {
+function ChatMessage({
+  message,
+  type,
+  id,
+  onDelete,
+  onReport,
+}: ChatMessageProps) {
   const [showModal, setShowModal] = useState(false);
 
   const handleImageClick = () => {
@@ -75,10 +95,10 @@ function ChatMessage({ message, type, id, onDelete, onReport }: ChatMessageProps
         alt="Avatar do usuário"
         className="w-10 h-10 rounded-full mr-4"
       />
-      <Card date="12:34 PM" className="p-2 rounded-lg bg-gray-200">
+      <Card date="12:34 PM" className="p-2 rounded-lg rounded-tl-none">
         {type === "text" && <div className="text-lg">{message}</div>}
         {type === "image" && (
-          <div className="cursor-pointer" onClick={handleImageClick}>
+          <div className="cursor-pointer">
             <img src={message} alt="Imagem enviada pelo usuário" />
           </div>
         )}
@@ -91,14 +111,23 @@ function ChatMessage({ message, type, id, onDelete, onReport }: ChatMessageProps
           >
             <FiFile className="text-gray-500 mr-2" />
             <div className="flex flex-col">
-              <div className="text-sm font-medium">{message.split("/").pop()}</div>
-              <div className="text-xs text-gray-500">{message.split(".").pop()}</div>
+              <div className="text-sm font-medium">
+                {message.split("/").pop()}
+              </div>
+              <div className="text-xs text-gray-500">
+                {message.split(".").pop()}
+              </div>
             </div>
           </div>
         )}
-        <ChatMessageActions id={id} onDelete={onDelete} onReport={onReport} />
+        {/* <ChatMessageActions id={id} onDelete={onDelete} onReport={onReport} /> */}
       </Card>
-      <Modal isOpen={showModal} onRequestClose={handleModalClose} className="modal" overlayClassName="overlay">
+      <Modal
+        isOpen={showModal}
+        onRequestClose={handleModalClose}
+        className="modal"
+        overlayClassName="overlay"
+      >
         <img src={message} alt="Imagem em tamanho grande" />
       </Modal>
     </div>
@@ -113,9 +142,16 @@ interface ChatMessagesProps {
 
 function ChatMessages({ messages, onDelete, onReport }: ChatMessagesProps) {
   return (
-    <div className="overflow-y-auto p-4">
+    <div className="p-4 h-full overflow-y-auto" id="chat">
       {messages.map((message, index) => (
-        <ChatMessage key={index} message={message.message} type={message.type} id={message.id} onDelete={onDelete} onReport={onReport} />
+        <ChatMessage
+          key={index}
+          message={message.message}
+          type={message.type}
+          id={message.id}
+          onDelete={onDelete}
+          onReport={onReport}
+        />
       ))}
     </div>
   );
@@ -129,24 +165,31 @@ interface ChatInputProps {
 
 function ChatInput({ message, setMessage, handleSendMessage }: ChatInputProps) {
   return (
-    <div className="relative">
-      <input
-        type="text"
-        placeholder="Digite sua mensagem..."
-        className="w-full border border-gray-300 rounded-lg p-4 pl-10 text-lg bg-gray-100"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-      />
-      <div className="absolute top-0 right-0 h-full flex items-center mr-5">
-        <button className="text-gray-600 text-xl" onClick={handleSendMessage}>
-          <AiOutlineArrowRight />
-        </button>
-        <button className="ml-3 text-gray-600 text-xl">
-          <FiPaperclip />
-        </button>
-        <button className="ml-3 text-gray-600 text-xl">
-          <FiImage />
-        </button>
+    <div>
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Digite sua mensagem..."
+          className="w-full border border-gray-300 rounded-lg p-4 pl-10 text-lg bg-gray-100"
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
+          onKeyUp={(e) => {
+            if (e.key === "Enter") {
+              handleSendMessage();
+            }
+          }}
+        />
+        <div className="absolute top-0 right-0 h-full flex items-center mr-5">
+          <button className="text-gray-600 text-xl" onClick={handleSendMessage}>
+            <AiOutlineArrowRight />
+          </button>
+          <button className="ml-3 text-gray-600 text-xl">
+            <FiPaperclip />
+          </button>
+          <button className="ml-3 text-gray-600 text-xl">
+            <FiImage />
+          </button>
+        </div>
       </div>
     </div>
   );
@@ -154,59 +197,77 @@ function ChatInput({ message, setMessage, handleSendMessage }: ChatInputProps) {
 
 function GroupInfo() {
   return (
-    <div className="bg-white p-4 text-center">
-      <h2 className="text-lg font-bold mb-4">Grupo 1</h2>
-      <div className="flex items-center mb-2">
+    <div className="p-4 text-center flex flex-col h-full">
+      {/* Imagem do grupo */}
+      <img
+        src="https://picsum.photos/200"
+        alt="Avatar do grupo"
+        className="w-32 h-32 rounded-full mx-auto mb-4"
+      />
+      <h1 className="text-2xl font-bold mb-2">Grupo de Teste</h1>
+      {/* Criação */}
+      <div className="flex items-center mb-2 pb-2 border-b-2">
         <img
           src="https://picsum.photos/200"
           alt="Avatar do grupo"
           className="w-8 h-8 rounded-full mr-2"
         />
-        <span className="text-gray-500 text-sm">Criado por John Doe</span>
+        <span className="text-gray-700 text-sm">Criado por John Doe</span>
       </div>
-      <div className="flex items-center mb-2">
-        <span className="text-gray-500 text-sm mr-2">Membros:</span>
+      {/* Membros */}
+      <div className="flex items-center mb-2 relative pb-2 border-b-2">
+        <span className="text-gray-700 text-sm mr-2">Membros:</span>
         <img
           src="https://picsum.photos/200"
           alt="Avatar do usuário"
           className="w-6 h-6 rounded-full mr-1"
         />
         <img
-          src="https://picsum.photos/200"
+          src="https://picsum.photos/500"
           alt="Avatar do usuário"
-          className="w-6 h-6 rounded-full mr-1"
+          className="w-6 h-6 rounded-full mr-1 -ml-4"
         />
         <img
-          src="https://picsum.photos/200"
+          src="https://picsum.photos/600"
           alt="Avatar do usuário"
-          className="w-6 h-6 rounded-full mr-1"
+          className="w-6 h-6 rounded-full mr-1 -ml-4"
         />
-        <img
-          src="https://picsum.photos/200"
-          alt="Avatar do usuário"
-          className="w-6 h-6 rounded-full mr-1"
-        />
-        <img
-          src="https://picsum.photos/200"
-          alt="Avatar do usuário"
-          className="w-6 h-6 rounded-full mr-1"
-        />
+        <span className="text-gray-700 text-sm">+ 3</span>
       </div>
-      <div className="flex items-center mb-2">
-        <span className="text-gray-500 text-sm mr-2">Descrição:</span>
-        <span className="text-gray-500 text-sm">
+      {/* Descrição */}
+      <div className="flex items-center mb-2 pb-2 border-b-2">
+        <span className="text-gray-700 text-sm mr-2">Descrição:</span>
+        <span className="text-gray-700 text-sm">
           Este é um grupo para discutir o projeto.
         </span>
       </div>
+      <div className="flex-grow"></div>
+      {/* Botões */}
+      <button className="rounded-lg py-2 px-4 bg-red-500 text-white font-bold mt-2">
+        Sair do grupo
+      </button>
+      <button className="rounded-lg py-2 px-4 bg-gray-300 text-gray-700 font-bold mt-2">
+        Excluir grupo
+      </button>
     </div>
   );
 }
 
 function Chat() {
-  const [messages, setMessages] = useState<{ message: string; type: "text" | "image" | "file"; id: number }[]>([
+  interface message {
+    message: string;
+    type: "text" | "image" | "file";
+    id: number;
+  }
+
+  const [messages, setMessages] = useState<message[]>([
     { message: "Olá a todos!", type: "text", id: 1 },
     { message: "Como vocês estão hoje?", type: "text", id: 2 },
-    { message: "Alguém pode me ajudar com este problema?", type: "text", id: 3 },
+    {
+      message: "Alguém pode me ajudar com este problema?",
+      type: "text",
+      id: 3,
+    },
     { message: "https://picsum.photos/200", type: "image", id: 4 },
     {
       message:
@@ -219,9 +280,21 @@ function Chat() {
 
   const handleSendMessage = () => {
     if (message.trim() !== "") {
-      const newMessage = { message, type: "text", id: messages.length + 1 };
+      const newMessage: message = {
+        message,
+        type: "text",
+        id: Math.random(),
+      };
       setMessages([...messages, newMessage]);
       setMessage("");
+
+      // Funciona, mas melhorar posteriormente.
+      setTimeout(() => {
+        const chat = document.getElementById("chat");
+        if (chat) {
+          chat.scrollTop = chat.scrollHeight;
+        }
+      }, 10);
     }
   };
 
@@ -235,24 +308,39 @@ function Chat() {
 
   return (
     <div className="flex flex-col h-full font-sans">
-      <MenuTitle icon={<MdOutlineGroups />} title="Chat">
-        <></>
-      </MenuTitle>
+      {/* Cabeçalho */}
+
+      {/* Conteúdo */}
       <div className="flex flex-row h-full">
-        <div className="flex flex-col w-3/4 h-full border-r border-gray-300">
-          <ChatHeader />
-          {/* Adicionando scroll */}
-          <div className="flex-grow">
-            <ChatMessages messages={messages} onDelete={handleDeleteMessage} onReport={handleReportMessage} />
+        {/* Chat */}
+        <div className="w-3/4 flex flex-col">
+          <MenuTitle icon={<MdOutlineGroups />} title={`Chat - Grupo de Teste`}>
+            <></>
+          </MenuTitle>
+          <div className="flex flex-col flex-grow overflow-y-auto">
+            <ChatMessages
+              messages={messages}
+              onDelete={handleDeleteMessage}
+              onReport={handleReportMessage}
+            />
           </div>
-          <ChatInput
-            message={message}
-            setMessage={setMessage}
-            handleSendMessage={handleSendMessage}
-          />
+
+          {/* Input */}
+          <div className="w-full sticky bottom-0">
+            <ChatInput
+              message={message}
+              setMessage={setMessage}
+              handleSendMessage={handleSendMessage}
+            />
+          </div>
         </div>
-        <div className="w-1/4 bg-white p-4">
-          <GroupInfo />
+
+        {/* Info */}
+        <div className="flex flex-col w-1/4 bg-white border-l-2">
+          <div className="h-16 w-full bg-gray-50 border-b-2"></div>
+          <div className="hidden md:block w-full bg-white p-4 ">
+            <GroupInfo />
+          </div>
         </div>
       </div>
     </div>
