@@ -9,10 +9,10 @@ services:
       MYSQL_PASSWORD: 123
     ports:
       - "3306:3306"
-    volumes:
-      - type: volume
-        source: mariadb_tcc_data
-        target: /var/lib/mysql
+    # volumes:
+    #   - type: volume
+    #     source: mariadb_tcc_data
+    #     target: /var/lib/mysql
     restart: always
 
   backend_tcc:
@@ -30,7 +30,7 @@ services:
     stdin_open: true
     depends_on:
       - db
-    command: -c "yarn install && cd ./src/ && npx sequelize db:migrate && npx sequelize db:seed:all && cd .. && yarn dev"
+    command: -c "sleep 15 && yarn install && cd ./src/ && npx sequelize db:migrate && npx sequelize db:seed:all && cd .. && yarn dev"
 
   frontend_tcc:
     image: node:20-alpine

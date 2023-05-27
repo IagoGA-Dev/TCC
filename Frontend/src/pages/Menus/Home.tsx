@@ -16,6 +16,12 @@ import { userData } from "../../data";
 import DarkButton from "../../components/DarkButton";
 import MenuTitle from "../../components/MenuTitle";
 
+// Redux
+
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../../redux/userSlice";
+import { RootState } from "../../redux/store";
+
 // Gera os cards
 function CardList({ redirect }: HomeProps) {
   // Vou arrumar posteriormente se precisar
@@ -80,6 +86,7 @@ function NewButton() {
 }
 
 function Header() {
+  const name = useSelector((state: RootState) => state.user.name);
   return (
     <MenuTitle
       icon={
@@ -89,7 +96,7 @@ function Header() {
           alt="avatar"
         />
       }
-      title={`Bem vindo, ${userData.name}`}
+      title={`Bem vindo, ${name}!`}
     >
       <NewButton />
     </MenuTitle>

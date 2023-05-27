@@ -4,8 +4,15 @@ import api from "../services/api";
 import Error from "../components/Error";
 import { useState } from "react";
 
+// Redux
+
+import { useSelector, useDispatch } from "react-redux";
+import { setUser } from "../redux/userSlice";
+import { RootState } from "../redux/store";
+
 function Login() {
   const [error, setError] = useState("");
+  const dispatch = useDispatch();
 
   function createError({ message }: { message: string }) {
     setError(message);
@@ -18,29 +25,44 @@ function Login() {
   function handleLogin(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
 
-
     // Temporariamente para debug
-    // if (false) {
-    //   api
-    //     .post("/usuario/login", {
-    //       Email: e.currentTarget.email.value,
-    //       Senha: e.currentTarget.password.value,
-    //     })
-    //     .then((res) => {
-    //       if (res.status === 200) {
-    //         window.location.href = "/app";
-    //         // Define o token no localStorage
-    //         localStorage.setItem("x-access-token", res.data.token);
-    //         localStorage.setItem("x-refresh-token", res.data.refreshToken);
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //       createError({ message: "Email ou senha incorretos!" });
-    //     });
-    // }
+  api
+    .post("/usuario/login", {
+      Email: e.currentTarget.email.value,
+      Senha: e.currentTarget.password.value,
+    })
+    .then((res) => {
+      if (res.status === 200) {
+        // Define o token no localStorage
+        // localStorage.setItem("x-access-token", res.data.token);
+        // localStorage.setItem("x-refresh-token", res.data.refreshToken);
+        // Define o usuário e token no Redux
+        const { token } = res.data;
 
-    window.location.href = "/app";
+        api.get("/usuario/info", {
+          headers: {
+            "x-access-token": token,
+          },
+        })
+        .then((res) => {
+          const { data } = res;
+          console.log(data);
+          dispatch(setUser(
+            {
+              id: data.ID,
+              name: data.Nome,
+              email: data.Email,
+              JWT_ACCESS_TOKEN: token,
+            }
+          ));
+          // window.location.href = "/app";
+        })
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+      createError({ message: "Email ou senha incorretos!" });
+    });
 
   }
 
