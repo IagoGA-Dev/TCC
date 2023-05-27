@@ -27,7 +27,7 @@ function GroupCard({ id, name, description, image, members, date, redirect }: Gr
       Icon={() => <div></div>}
       date={""}
       redirect={redirect}
-      route={"/chat"}
+      route={"chat"}
     >
       <div className="flex flex-col items-center">
         <img

@@ -13,13 +13,20 @@ import {
 import Card from "../../components/Card";
 import MenuTitle from "../../components/MenuTitle";
 import DarkButton from "../../components/DarkButton";
-import { taskData } from "../../data";
 import { Task } from "../../data/types";
-import Modal from "../../components/Modal";
+// import Modal from "../../components/Modal";
+import Modal from "react-modal";
+
+// Redux
+
+import { useSelector, useDispatch } from "react-redux";
+import { addTask, editTask } from "../../redux/taskSlice";
+import { RootState } from "../../redux/store";
 
 function Tasks() {
   // * Estado para as tarefas
-  const [tasks, setTasks] = useState<Task[]>(taskData);
+  const tasks = useSelector((state: RootState) => state.task.tasks);
+  const dispatch = useDispatch();
 
   //*  Estado para a visibilidade do modal e os valores dos inputs
   const [showModal, setShowModal] = useState(false);
@@ -35,29 +42,24 @@ function Tasks() {
     if (!titleInput || !descriptionInput || !statusInput) return;
     if (selectedTask) {
       // * Editar tarefa existente
-      setTasks(
-        tasks.map((task) =>
-          task.id === selectedTask.id
-            ? {
-              ...task,
-              title: titleInput,
-              description: descriptionInput,
-              status: statusInput,
-            }
-            : task
-        )
+      dispatch(
+        editTask({
+          id: selectedTask.id,
+          title: titleInput,
+          description: descriptionInput,
+          status: statusInput,
+        })
       );
     } else {
       // * Adicionar nova tarefa
-      setTasks([
-        ...tasks,
-        {
+      dispatch(
+        addTask({
           id: Math.max(...tasks.map((task) => task.id)) + 1,
           title: titleInput,
           description: descriptionInput,
           status: statusInput,
-        },
-      ]);
+        })
+      );
     }
     setShowModal(false);
     setTitleInput("");
@@ -65,17 +67,6 @@ function Tasks() {
     setStatusInput("todo");
     setSelectedTask(null);
   };
-
-  // * Função para deletar uma tarefa
-  // const deleteTask = () => {
-  //   if (!selectedTask) return;
-  //   setTasks(tasks.filter((task) => task.id !== selectedTask.id));
-  //   setShowModal(false);
-  //   setTitleInput("");
-  //   setDescriptionInput("");
-  //   setStatusInput("todo");
-  //   setSelectedTask(null);
-  // };
 
   // * Função para selecionar uma tarefa e mostrar seus detalhes
   const selectTask = (task: Task) => {
@@ -107,11 +98,12 @@ function Tasks() {
         {["todo", "em desenvolvimento", "terminado"].map((status) => (
           <div
             key={status}
-            className="flex flex-col flex-1 bg-gray-100 rounded-md p-4 gap-4"
+            className="flex flex-col flex-1 bg-gray-100 rounded-sm p-4 gap-4 border-2"
           >
-            <h2 className="text-lg font-bold text-gray-700 capitalize">
+            <h2 className="text-lg font-bold text-gray-700 capitalize text-center">
               {status}
             </h2>
+            <hr className="border-gray-700" />
             <div className="flex flex-col gap-4">
               {/* Renderiza as tarefas de acordo com o status */}
               {tasks
@@ -146,24 +138,20 @@ function Tasks() {
       </div>
 
       {/* Modal */}
-      <Modal
-        title={selectedTask ? "Editar tarefa" : "Nova tarefa"}
-        showModal={showModal}
-        setShowModal={setShowModal}
-        buttons={[
-          {
-            text: "Cancelar",
-            icon: <BsX className="inline-block mr-2" />,
-            onClick: () => setShowModal(false),
-          },
-          {
-            text: selectedTask ? "Salvar" : "Adicionar",
-            icon: <BsCheck className="inline-block mr-2" />,
-            onClick: saveTask,
-          },
-        ]}
-      >
+      {/* <Modal
+        isOpen={showModal}
+        onRequestClose={handleModalClose}
+        className="modal"
+        overlayClassName="overlay"
+      ></Modal> */}
+      
+
+      <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)}>
         <div className="flex flex-col gap-4">
+          <h2 className="text-lg font-bold text-gray-700">
+            {selectedTask ? "Editar tarefa" : "Nova tarefa"}
+          </h2>
+          <hr className="border-gray-700" />
           <div className="flex flex-col gap-2">
             <label htmlFor="title">Título</label>
             <input
@@ -197,6 +185,24 @@ function Tasks() {
               type="date"
               className="border border-gray-300 rounded-md px-4 py-2"
             />
+          </div>
+          <div className="flex flex-row gap-4 justify-end">
+            <button
+              className="flex items-center gap-2 bg-gray-200 px-4 py-2 rounded-md"
+              onClick={() => setShowModal(false)}
+            >
+              <BsX className="w-6 h-6 text-gray-700" />
+              <span className="text-gray-700">Cancelar</span>
+            </button>
+            <button
+              className="flex items-center gap-2 bg-gray-200 px-4 py-2 rounded-md"
+              onClick={saveTask}
+            >
+              <BsCheck className="w-6 h-6 text-gray-700" />
+              <span className="text-gray-700">
+                {selectedTask ? "Salvar" : "Adicionar"}
+              </span>
+            </button>
           </div>
         </div>
       </Modal>

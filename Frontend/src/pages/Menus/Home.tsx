@@ -32,9 +32,9 @@ function CardList({ redirect }: HomeProps) {
           {card.children}
         </Card>
       ))}
-      <Card Icon={FaChartBar} title="Gráfico de interações" className="">
+      {/* <Card Icon={FaChartBar} title="Gráfico de interações" className="">
           <Chart data={graphData} widthP={100} height={75} />
-      </Card>
+      </Card> */}
     </div>
   );
 }
@@ -107,6 +107,9 @@ function Home({ redirect }: HomeProps) {
       <div className="flex flex-col flex-1 p-6 gap-6 bg-gray-50">
         <CardList redirect={redirect} />
         {/* Parte principal vai ser uma lista de tarefas */}
+        <Card Icon={FaChartBar} title="Gráfico de interações">
+          <Chart data={graphData} widthP={100} height={300} />
+        </Card>
       </div>
     </div>
   );

@@ -1,88 +1,67 @@
-//TODO: Melhorar posteriormente o sombreamento da sidebar nessa página...
-//TODO: Investigar o erro importunante do React sobre chave única no console.
 import { useState } from "react";
 import { BsCalendar, BsPlusCircleDotted } from "react-icons/bs";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import MenuTitle from "../../components/MenuTitle";
 import DarkButton from "../../components/DarkButton";
-import { eventData } from "../../data";
 import { Event } from "../../data/types";
 
+import { useSelector } from "react-redux";
+// import { addEvent, deleteEvent } from "../../redux/calendarSlice";
+import { RootState } from "../../redux/store";
+
 function Calendar() {
-  // * Estados
-  // * Mês e ano atual.
+  const events = useSelector((state: RootState) => state.calendar.events);
+
   const [month, setMonth] = useState(new Date().getMonth());
   const [year, setYear] = useState(new Date().getFullYear());
-
-  // * Eventos do calendário.
-  // * É referente a todos os eventos do calendário.
-  // * Não só os eventos do mês atual.
-  const [events] = useState(eventData);
-
-  // * Data e evento selecionado.
+  
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState({} as Event);
 
-
-  // * Obtém o número de dias em um mês.
   const getDaysInMonth = (month: number, year: number) => {
     return new Date(year, month + 1, 0).getDate();
   };
 
-  // * Obtém o dia da semana do primeiro dia do mês.
-  // * Por exemplo, maio de 2023 começa em uma segunda-feira.
   const getFirstDayOfMonth = (month: number, year: number) => {
     return new Date(year, month, 1).getDay();
   };
 
-  // * Obtém o nome do mês em português.
   const getMonthName = (month: number) => {
     return new Date(0, month).toLocaleString("pt-BR", { month: "long" });
   };
 
-  // * Altera o mês do calendário.
-  // * Delta é a diferença entre o mês atual e o mês que será alterado.
   const changeMonth = (delta: number) => {
-    // * Se o mês for menor que 0, então o mês anterior é dezembro do ano anterior.
     if (month + delta < 0) {
       setMonth(11);
       setYear(year - 1);
-      // * Se o mês for maior que 11, então o mês seguinte é janeiro do ano seguinte.
     } else if (month + delta > 11) {
       setMonth(0);
       setYear(year + 1);
-      // * Caso contrário, apenas altera o mês.
     } else {
       setMonth(month + delta);
     }
   };
 
-  // * Seleciona uma data no calendário.
   const selectDate = (date: Date) => {
     setSelectedDate(date);
     setSelectedEvent({} as Event);
   };
 
-  // * Seleciona um evento no calendário.
-  // * OBS. Menu lateral.
   const selectEvent = (event: Event) => {
     setSelectedEvent(event);
   };
 
   return (
     <div className="flex flex-col h-screen">
-      {/* Cabeçalho */}
       <MenuTitle icon={<BsCalendar />} title="Calendário">
         <DarkButton
           icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
           text="Novo Evento"
         />
       </MenuTitle>
-      {/* Corpo */}
       <div className="flex flex-row flex-1">
         <div className="flex flex-col w-3/4 bg-white border-r">
-          {/* Cabeçalho do calendário */}
           <div className="flex flex-row items-center justify-between p-4 border-b">
             <button onClick={() => changeMonth(-1)}>
               <AiOutlineArrowLeft className="w-6 h-6 text-gray-700 hover:text-gray-600" />
@@ -96,24 +75,19 @@ function Calendar() {
               <AiOutlineArrowRight className="w-6 h-6 text-gray-700 hover:text-gray-600" />
             </button>
           </div>
-          {/* Corpo do calendário */}
           <div className="grid grid-cols-7 gap-1 p-4">
-            {/* Renderizando os dias da semana */}
             {["D", "S", "T", "Q", "Q", "S", "S"].map((day, index) => (
               <div key={index} className="text-center text-gray-500">
                 {day}
               </div>
             ))}
 
-            {/* Renderizando os dias do mês */}
-            {/* Insere dias vazios no início do mês */}
             {Array(getFirstDayOfMonth(month, year))
               .fill(null)
               .map((_, i) => (
                 <div key={i} className="h-16"></div>
               ))}
 
-            {/* Insere os dias restantes */}
             {Array(getDaysInMonth(month, year))
               .fill(null)
               .map((_, i) => (
@@ -127,11 +101,8 @@ function Calendar() {
                     }`}
                   onClick={() => selectDate(new Date(year, month, i + 1))}
                 >
-                  {/* Número do dia */}
                   <span className="text-gray-700">{i + 1}</span>
 
-                  {/* Renderiza um ponto para cada dia que possuí um evento */}
-                  {/* Pode ser que haja um problema caso haja mais que 1 evento no mesmo dia */}
                   <div className="flex flex-row gap-1 mt-1">
                     {events
                       .filter(

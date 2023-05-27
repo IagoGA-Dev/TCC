@@ -9,7 +9,7 @@ const translations: { [key: string]: string } = {
   calendar: "Calendário",
   tasks: "Tarefas",
   messages: "Mensagens",
-  settings: "Configurações"
+  settings: "Configurações",
 };
 
 const translate = (active: string) => {

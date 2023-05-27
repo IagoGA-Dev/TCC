@@ -12,6 +12,8 @@ import Login from "./pages/Login.tsx";
 import Register from "./pages/Register.tsx";
 import Profile from "./pages/Profile.tsx";
 import App from "./pages/App.tsx";
+import { store } from "./redux/store.tsx";
+import { Provider } from "react-redux";
 
 // Pretendo usar MemoryBrowserRouter no final do projeto.
 const router = createBrowserRouter([
@@ -46,11 +48,13 @@ const router = createBrowserRouter([
   {
     path: "/app",
     element: <App />,
-  }
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <Provider store={store}>
+      <RouterProvider router={router} />
+    </Provider>
   </React.StrictMode>
 );

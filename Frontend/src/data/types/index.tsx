@@ -36,7 +36,7 @@ interface Event {
   id: number;
   title: string;
   date: Date;
-  color: string;
+  color: "blue" | "green" | "yellow" | "red";
 }
 
 // Tarefas

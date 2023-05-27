@@ -6,6 +6,12 @@ import Modal from "react-modal";
 import MenuTitle from "../../components/MenuTitle";
 import Card from "../../components/Card";
 
+// Redux
+
+import { useSelector, useDispatch } from "react-redux";
+import { addMessage, deleteMessage } from "../../redux/chatSlice";
+import { RootState } from "../../redux/store";
+
 interface ChatMessageProps {
   message: string;
   type: "text" | "image" | "file";
@@ -14,22 +20,7 @@ interface ChatMessageProps {
   onReport: (id: number) => void;
 }
 
-function ChatHeader() {
-  return (
-    <div className="flex items-center bg-gray-100 p-4">
-      <img
-        src="https://picsum.photos/200"
-        alt="Avatar do usuário"
-        className="w-12 h-12 rounded-full mr-4"
-      />
-      <div>
-        <h2 className="font-bold text-lg">Grupo 1</h2>
-        <span className="text-gray-500 text-sm">Criado por John Doe</span>
-      </div>
-    </div>
-  );
-}
-
+// ! Função desabilitada temporariamente
 function ChatMessageActions({
   id,
   onDelete,
@@ -95,7 +86,12 @@ function ChatMessage({
         alt="Avatar do usuário"
         className="w-10 h-10 rounded-full mr-4"
       />
-      <Card date="12:34 PM" className="p-2 rounded-lg rounded-tl-none">
+      <Card date={
+        new Date().toLocaleTimeString("en-US", {
+          hour: "2-digit",
+          minute: "2-digit",
+        })
+      } className="p-2 rounded-lg rounded-tl-none">
         {type === "text" && <div className="text-lg">{message}</div>}
         {type === "image" && (
           <div className="cursor-pointer">
@@ -260,50 +256,41 @@ function Chat() {
     id: number;
   }
 
-  const [messages, setMessages] = useState<message[]>([
-    { message: "Olá a todos!", type: "text", id: 1 },
-    { message: "Como vocês estão hoje?", type: "text", id: 2 },
-    {
-      message: "Alguém pode me ajudar com este problema?",
-      type: "text",
-      id: 3,
-    },
-    { message: "https://picsum.photos/200", type: "image", id: 4 },
-    {
-      message:
-        "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
-      type: "file",
-      id: 5,
-    },
-  ]);
   const [message, setMessage] = useState<string>("");
-
+  const messages = useSelector((state: RootState) => state.chat.messages);
+  const dispatch = useDispatch();
+  
+  // Lida com o envio de mensagens
   const handleSendMessage = () => {
     if (message.trim() !== "") {
       const newMessage: message = {
         message,
         type: "text",
-        id: Math.random(),
+        id: Math.random(), // ! REMOVER NA CONEXÃO COM O BACKEND!!!
       };
-      setMessages([...messages, newMessage]);
+      dispatch(addMessage(newMessage));
       setMessage("");
 
-      // Funciona, mas melhorar posteriormente.
+
+      // ! Deve ter alguma forma de solucionar isso sem usar setTimeout
       setTimeout(() => {
         const chat = document.getElementById("chat");
         if (chat) {
           chat.scrollTop = chat.scrollHeight;
         }
-      }, 10);
+      }, 1);
+    
     }
   };
 
+  // Lida com a exclusão de mensagens
   const handleDeleteMessage = (id: number) => {
-    setMessages(messages.filter((message) => message.id !== id));
+    dispatch(deleteMessage(id));
   };
 
+  // Lida com o report de mensagens
   const handleReportMessage = (id: number) => {
-    console.log(`Message with id ${id} reported`);
+    console.log(`Mensagem ${id} reportada!`);
   };
 
   return (
@@ -326,7 +313,7 @@ function Chat() {
           </div>
 
           {/* Input */}
-          <div className="w-full sticky bottom-0">
+          <div className="w-full p-5">
             <ChatInput
               message={message}
               setMessage={setMessage}
