@@ -1,25 +1,32 @@
 const dbConfig = require("../config/config.json");
 const { Sequelize, DataTypes } = require("sequelize");
 
-const sequelize = new Sequelize(
-  dbConfig.development.database,
-  dbConfig.development.username,
-  dbConfig.development.password,
-  {
-    host: dbConfig.development.HOST,
-    dialect: dbConfig.development.dialect,
-    operatorsAliases: false,
+// const sequelize = new Sequelize(
+//   dbConfig.development.database,
+//   dbConfig.development.username,
+//   dbConfig.development.password,
+//   {
+//     host: dbConfig.development.HOST,
+//     dialect: dbConfig.development.dialect,
+//     operatorsAliases: false,
 
-    pool: {
-      max: dbConfig.development.pool.max,
-      min: dbConfig.development.pool.min,
-      acquire: dbConfig.development.pool.acquire,
-      idle: dbConfig.development.pool.idle,
-    },
+//     pool: {
+//       max: dbConfig.development.pool.max,
+//       min: dbConfig.development.pool.min,
+//       acquire: dbConfig.development.pool.acquire,
+//       idle: dbConfig.development.pool.idle,
+//     },
 
-    logging: false,
-  },
-);
+//     logging: false,
+//   },
+// );
+
+
+const sequelize = new Sequelize('tcc', 'tcc', '123', { 
+  host: 'db',
+  dialect: 'mariadb',
+  logging: false,
+});
 
 sequelize
   .authenticate()

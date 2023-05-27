@@ -1,0 +1,54 @@
+services:
+  db:
+    image: mariadb:lts
+    container_name: mariadb_tcc
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tcc
+      MYSQL_USER: tcc
+      MYSQL_PASSWORD: 123
+    ports:
+      - "3306:3306"
+    volumes:
+      - type: volume
+        source: mariadb_tcc_data
+        target: /var/lib/mysql
+    restart: always
+
+  backend_tcc:
+    image: node:20-alpine
+    container_name: backend_tcc
+    entrypoint: /bin/sh
+    ports:
+      - "3000:3000"
+    working_dir: /app/backend_tcc
+    volumes:
+      - type: bind
+        source: ./Backend/
+        target: /app/backend_tcc
+    tty: true
+    stdin_open: true
+    depends_on:
+      - db
+    command: -c "yarn install && cd ./src/ && npx sequelize db:migrate && npx sequelize db:seed:all && cd .. && yarn dev"
+
+  frontend_tcc:
+    image: node:20-alpine
+    container_name: frontend_tcc
+    entrypoint: /bin/sh
+    ports:
+      - "8000:8000"
+    working_dir: /app/frontend_tcc
+    volumes:
+      - type: bind
+        source: ./Frontend/
+        target: /app/frontend_tcc
+    tty: true
+    stdin_open: true
+    depends_on:
+      - backend_tcc
+    command: -c "yarn install && yarn dev"
+    logging:
+      driver: none
+volumes:
+  mariadb_tcc_data:

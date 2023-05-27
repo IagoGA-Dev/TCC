@@ -1,9 +1,9 @@
 {
   "development": {
-    "username": "void",
+    "username": "tcc",
     "password": "123",
     "database": "tcc",
-    "host": "127.0.0.1",
+    "host": "db",
     "dialect": "mariadb",
     "pool": {
       "max": 5,
