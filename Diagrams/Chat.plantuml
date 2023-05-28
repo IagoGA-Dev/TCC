@@ -1,0 +1,39 @@
+@startuml
+
+actor Usuário
+Boundary Frontend
+Boundary Backend
+Boundary LLM
+Database "Banco de Dados" as DB
+Boundary Websocket
+Boundary Redux
+
+activate Frontend
+Frontend -> Frontend : Valida token JWT
+deactivate Frontend
+alt Token válido?
+    Usuário -> Frontend : Envia mensagem
+    activate Frontend
+    Frontend -> Frontend : Valida mensagem
+    alt Mensagem válida?
+        Frontend -> Backend : Envia mensagem para o servidor via Websocket
+        activate Backend
+        Backend -> Backend : Valida mensagem
+        Backend -> LLM : Envia mensagem para moderação
+        activate LLM
+        LLM -> LLM : Valida mensagem
+        LLM -> Backend : Retorna mensagem validada
+        deactivate LLM
+        Backend -> DB : Salva mensagem no banco de dados
+        Backend -> Websocket : Envia mensagem para todos os clientes conectados
+        deactivate Backend
+        Frontend -> Redux : Adiciona mensagem ao estado global
+        Frontend -> Frontend : Exibe mensagem na tela
+    else
+        Frontend -> Usuário : Exibe mensagem de erro (mensagem inválida)
+    end
+    deactivate Frontend
+else
+    Frontend -> Usuário : Exibe mensagem de erro (token inválido)
+end
+@enduml

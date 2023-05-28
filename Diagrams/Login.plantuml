@@ -1,0 +1,52 @@
+@startuml
+
+actor Usuário
+Boundary Frontend
+Boundary Backend
+Database "Banco de Dados" as DB
+
+Usuário -> Frontend : Preenche email e senha
+activate Frontend
+Frontend -> Frontend : Valida campos
+alt Campos preenchidos corretamente?
+    Frontend -> Backend : Realiza requisição POST para /usuario/login
+    activate Backend
+    Backend -> Backend : Valida campos
+    Backend -> Backend : Gera hash da senha
+    Backend -> DB : Consulta usuário
+    activate DB
+    DB --> Backend : Retorna informações do usuário
+    deactivate DB
+    Backend -> Backend : Autentica usuário
+    alt Usuário autenticado?
+        Backend -> Backend : Gera token de acesso
+        Backend -> Frontend : Retorna token de acesso
+        deactivate Backend
+        Frontend -> Frontend : Armazena token em uma variável constante
+        Frontend -> Backend : Realiza requisição GET para /usuario/info
+        activate Backend
+        Backend -> Backend : Valida token de acesso
+        Backend -> DB : Consulta informações do usuário
+        activate DB
+        DB --> Backend : Retorna informações do usuário
+        deactivate DB
+        alt Informações do usuário retornadas?
+            Backend -> Frontend : Retorna informações do usuário
+            deactivate Backend
+            Frontend -> Frontend : Define informações do usuário no Redux
+            Frontend -> Usuário : Redireciona para a página de aplicação
+        else
+            Backend -> Frontend : Retorna mensagem de erro
+            deactivate Backend
+            Frontend -> Usuário : Exibe mensagem de erro ( token inválido )
+        end
+    else
+        Backend -> Frontend : Retorna mensagem de erro ( usuário não autenticado )
+        deactivate Backend
+        Frontend -> Usuário : Exibe mensagem de erro ( usuário não autenticado )
+    end
+else
+    Frontend -> Usuário : Exibe mensagem de erro ( campos inválidos )
+end
+deactivate Frontend
+@enduml
