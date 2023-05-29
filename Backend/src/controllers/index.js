@@ -308,6 +308,40 @@ class UsuarioController extends CrudController {
       }
     });
   }
+
+  async refresh(req, res) {
+    const { createToken } = require("../middleware/auth");
+    const config = require("../config/jwt.json");
+    const jwt = require("jsonwebtoken");
+    const { refreshToken } = req.body;
+
+    if (!refreshToken) {
+      res.status(400).send({
+        code: 1,
+        message: "Falha no corpo da requisição",
+      });
+      return;
+    }
+
+    jwt.verify(refreshToken, config.refreshTokenSecret, (err, decoded) => {
+      if (err) {
+        res.status(401).send({
+          code: 2,
+          message: "Token inválido",
+        });
+      } else {
+        const token = createToken(decoded);
+        res.status(200).send({
+          code: 200,
+          message: "Token atualizado com sucesso",
+          token: token,
+        });
+      }
+    }
+    );
+  }
+
+
 }
 
 module.exports = {

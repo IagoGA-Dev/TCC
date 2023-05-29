@@ -16,6 +16,8 @@ import { userData } from "../../data";
 import DarkButton from "../../components/DarkButton";
 import MenuTitle from "../../components/MenuTitle";
 
+import Passport from "../../utils/passport";
+
 // Redux
 
 import { useSelector, useDispatch } from "react-redux";
@@ -85,7 +87,7 @@ function NewButton() {
   );
 }
 
-function Header() {
+function Header({ user }: { user: any}) {
   const name = useSelector((state: RootState) => state.user.name);
   return (
     <MenuTitle
@@ -96,7 +98,7 @@ function Header() {
           alt="avatar"
         />
       }
-      title={`Bem vindo, ${name}!`}
+      title={`Bem vindo, ${user.name}!`}
     >
       <NewButton />
     </MenuTitle>
@@ -108,9 +110,11 @@ interface HomeProps {
 }
 
 function Home({ redirect }: HomeProps) {
+  const [user, setUser ] = useState(Passport.getUsuario());
+
   return (
     <div>
-      <Header />
+      <Header user={user} />
       <div className="flex flex-col flex-1 p-6 gap-6 bg-gray-50">
         <CardList redirect={redirect} />
         {/* Parte principal vai ser uma lista de tarefas */}

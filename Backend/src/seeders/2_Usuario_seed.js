@@ -33,6 +33,15 @@ module.exports = {
           CPF: "84511707065",
           ID_Instituicao: 3,
         },
+        {
+          ID: null,
+          Nome: "Desenvolvedor",
+          Email: "dev@dev.com",
+          Senha: "$2b$10$zHNOoCg18miLZmLaNv.DOeKeO5qRJzJyYhpDnu81Y2JMJweUHwl5C",
+          Salt: "$2b$10$zHNOoCg18miLZmLaNv.DOe",
+          CPF: "29070104091",
+          ID_Instituicao: 1
+        },
       ],
       {}
     );

@@ -191,6 +191,7 @@ const { validateUsuario } = require("../middleware");
 
 usuario = new UsuarioController(db.Usuario);
 
+router.post("/refresh", usuario.refresh.bind(usuario));
 router.use(validateUsuario);
 
 // * Função para gerar salt e senha criptografada.

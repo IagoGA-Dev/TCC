@@ -13,6 +13,8 @@ services:
     #   - type: volume
     #     source: mariadb_tcc_data
     #     target: /var/lib/mysql
+    volumes:
+      - mariadb_tcc_data:/var/lib/mysql
     restart: always
 
   backend_tcc:
@@ -30,7 +32,8 @@ services:
     stdin_open: true
     depends_on:
       - db
-    command: -c "sleep 15 && yarn install && cd ./src/ && npx sequelize db:migrate && npx sequelize db:seed:all && cd .. && yarn dev"
+    command: -c "sleep 15 && yarn install && cd ./src/ && ((npx sequelize db:migrate && npx sequelize db:seed:all) || true) && cd .. && yarn dev"
+    # command: -c "sleep 10 && yarn test"
 
   frontend_tcc:
     image: node:20-alpine
@@ -50,5 +53,7 @@ services:
     command: -c "yarn install && yarn dev"
     logging:
       driver: none
+
 volumes:
   mariadb_tcc_data:
+    name: mariadb_tcc_data

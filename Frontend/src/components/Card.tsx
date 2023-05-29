@@ -1,7 +1,6 @@
 import React from 'react';
 import { AiOutlineCheckCircle } from 'react-icons/ai';
 
-// Define the type for Icon
 type IconType = React.ElementType<typeof AiOutlineCheckCircle>;
 
 // * Interface do Card

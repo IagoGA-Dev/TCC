@@ -34,29 +34,10 @@ function Login() {
     .then((res) => {
       if (res.status === 200) {
         // Define o token no localStorage
-        // localStorage.setItem("x-access-token", res.data.token);
-        // localStorage.setItem("x-refresh-token", res.data.refreshToken);
-        // Define o usuário e token no Redux
-        const { token } = res.data;
+        localStorage.setItem("x-access-token", res.data.token);
+        localStorage.setItem("x-refresh-token", res.data.refreshToken);
 
-        api.get("/usuario/info", {
-          headers: {
-            "x-access-token": token,
-          },
-        })
-        .then((res) => {
-          const { data } = res;
-          console.log(data);
-          dispatch(setUser(
-            {
-              id: data.ID,
-              name: data.Nome,
-              email: data.Email,
-              JWT_ACCESS_TOKEN: token,
-            }
-          ));
-          // window.location.href = "/app";
-        })
+        window.location.href = "/app";
       }
     })
     .catch((err) => {

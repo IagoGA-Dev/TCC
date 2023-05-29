@@ -1,0 +1,27 @@
+@startuml
+actor Componente
+participant ComponentePassaporte
+participant Navegador
+participant Servidor
+
+Componente -> ComponentePassaporte: Requisita informações do usuário
+ComponentePassaporte -> Navegador: Obtém token JWT do cookie
+Navegador -> ComponentePassaporte: Envia token JWT
+alt Token Existe e é Válido
+    ComponentePassaporte -> ComponentePassaporte: Verifica se o token JWT expirou
+    alt Token Válido
+        ComponentePassaporte -> ComponentePassaporte: Descriptografa o token JWT (react-jwt)
+        ComponentePassaporte -> Componente: Envia objeto descriptografado para o componente React
+    else Token Expirado
+        ComponentePassaporte -> Navegador: Requisita Token de Atualização
+        Navegador -> ComponentePassaporte: Envia token de atualização
+        ComponentePassaporte -> Servidor: Envia token de atualização para gerar novo token JWT
+        Servidor -> Servidor: Valida token de atualização
+        Servidor -> ComponentePassaporte: Envia novo token JWT
+        ComponentePassaporte -> ComponentePassaporte: Descriptografa o token JWT (react-jwt)
+        ' Processo reinicia
+    end
+else 
+    ComponentePassaporte -> Componente: Redireciona para a página de login
+end
+@enduml
