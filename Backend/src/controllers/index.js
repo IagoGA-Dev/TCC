@@ -84,7 +84,10 @@ class CrudController {
       .then((data) => {
         res.status(200).send(data);
       })
-      .catch((_) => {
+      .catch((err) => {
+        console.log("====================================");
+        console.log(err);
+        console.log("====================================");
         res.status(500).send({
           code: 3,
           message: "Erro interno no servidor",

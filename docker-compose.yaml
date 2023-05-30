@@ -13,8 +13,8 @@ services:
     #   - type: volume
     #     source: mariadb_tcc_data
     #     target: /var/lib/mysql
-    volumes:
-      - mariadb_tcc_data:/var/lib/mysql
+    # volumes:
+    #   - mariadb_tcc_data:/var/lib/mysql
     restart: always
 
   backend_tcc:

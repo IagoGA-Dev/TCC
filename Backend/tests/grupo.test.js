@@ -17,9 +17,18 @@ describe("GRUPO API", () => {
 
   it("deve criar um novo grupo", async () => {
     const res = await request(app).post("/api/grupo/").send({
+      ID: null,
       Nome: "Teste",
+      Descricao: "Teste",
       Categoria: "Teste",
+      Imagem: "Teste",
+      Membros: 0,
+      ID_Criador: 1,
+      ID_Instituicao: 1,
+      ID_Assistente: null,
       Privado: "false",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     expect(res.statusCode).toEqual(201);
@@ -30,9 +39,18 @@ describe("GRUPO API", () => {
 
   it("não deve criar um grupo que já existe", async () => {
     const res = await request(app).post("/api/grupo/").send({
+      ID: null,
       Nome: "Teste",
+      Descricao: "Teste",
       Categoria: "Teste",
+      Imagem: "Teste",
+      Membros: 0,
+      ID_Criador: 1,
+      ID_Instituicao: 1,
+      ID_Assistente: null,
       Privado: "false",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     expect(res.statusCode).toEqual(400);
@@ -41,9 +59,18 @@ describe("GRUPO API", () => {
   it("não deve criar um grupo com nome acima de 50 caracteres", async () => {
     const nome = "a".repeat(51);
     const res = await request(app).post("/api/grupo/").send({
+      ID: null,
       Nome: nome,
+      Descricao: "Teste",
       Categoria: "Teste",
+      Imagem: "Teste",
+      Membros: 0,
+      ID_Criador: 1,
+      ID_Instituicao: 1,
+      ID_Assistente: null,
       Privado: "false",
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     expect(res.statusCode).toEqual(400);
