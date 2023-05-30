@@ -10,10 +10,6 @@ class Passport {
     try {
       const usuario = jwtDecode(token as string) as Usuario;
 
-      console.log("Função getUsuario() retornou: ", usuario)
-      console.log("Token: ", token)
-      console.log("Token decodificado: ", jwtDecode(token as string))
-
       return usuario;
     } catch (error: any) {
       if (error.name === 'TokenExpiredError') {
@@ -25,14 +21,12 @@ class Passport {
   }
 }
 
-interface Usuario {
-  ID: number;
-  Nome: string;
-  Email: string;
-  Senha: string;
-  Salt: string;
-  CPF: string;
-  ID_Instituicao: number;
+export interface Usuario {
+  name: string;
+  avatar: string;
+  online: boolean;
+  role?: string;
+  school?: string
 }
 
 export default Passport;

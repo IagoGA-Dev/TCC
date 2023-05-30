@@ -9,6 +9,12 @@ Enum "Mensagem_Tipo_enum" {
   "Arquivo"
 }
 
+Enum "Tarefas_Status_enum" {
+  "Pendente"
+  "Em andamento"
+  "Concluída"
+}
+
 Table "Instituicao" {
   "ID" INT(11) [pk] 
   "Nome" VARCHAR(255) [not null]
@@ -46,6 +52,12 @@ Table "Grupo" {
   "ID_Instituicao" INT(11) [not null]
   "ID_Assistente" INT(11)
   "Privado" BOOL [not null, default: 0]
+}
+
+Table "Tarefas" {
+  "Nome": VARCHAR(255) [not null]
+  "Descricao": TEXT
+  "Status" 
 }
 
 Table "UsuarioGrupo" {

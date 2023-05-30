@@ -58,6 +58,8 @@ function Messages() {
       <div className="flex flex-col flex-grow gap-4 mt-4 p-4">
         {messages.map((message) => (
           <MessageCard
+            key={message.id}
+            id={message.id}
             avatar={message.avatar}
             name={message.name}
             role={message.role}

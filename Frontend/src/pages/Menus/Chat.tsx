@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FiPaperclip, FiImage, FiFile, FiTrash2, FiFlag } from "react-icons/fi";
+import { FiPaperclip, FiImage, FiFile } from "react-icons/fi";
 import { MdOutlineGroups } from "react-icons/md";
 import { AiOutlineArrowRight } from "react-icons/ai";
 import Modal from "react-modal";
@@ -20,60 +20,12 @@ interface ChatMessageProps {
   onReport: (id: number) => void;
 }
 
-// ! Função desabilitada temporariamente
-function ChatMessageActions({
-  id,
-  onDelete,
-  onReport,
-}: {
-  id: number;
-  onDelete: (id: number) => void;
-  onReport: (id: number) => void;
-}) {
-  const [showActions, setShowActions] = useState(false);
-
-  return (
-    <div className="absolute top-0 right-0 mt-2 mr-2">
-      <button
-        className={`text-gray-600 text-xl ${showActions ? "bg-gray-200" : ""}`}
-        onClick={() => setShowActions(!showActions)}
-      >
-        ...
-      </button>
-      {showActions && (
-        <div className="flex flex-col absolute top-0 right-0 mt-8 mr-2 bg-white border border-gray-300 rounded-lg p-2">
-          <button
-            className="flex items-center text-gray-600 text-sm hover:text-red-500"
-            onClick={() => onDelete(id)}
-          >
-            <FiTrash2 className="mr-2" />
-            <span>Delete</span>
-          </button>
-          <button
-            className="flex items-center text-gray-600 text-sm hover:text-red-500"
-            onClick={() => onReport(id)}
-          >
-            <FiFlag className="mr-2" />
-            <span>Report</span>
-          </button>
-        </div>
-      )}
-    </div>
-  );
-}
 
 function ChatMessage({
   message,
   type,
-  id,
-  onDelete,
-  onReport,
 }: ChatMessageProps) {
   const [showModal, setShowModal] = useState(false);
-
-  const handleImageClick = () => {
-    setShowModal(true);
-  };
 
   const handleModalClose = () => {
     setShowModal(false);

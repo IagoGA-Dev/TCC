@@ -64,6 +64,7 @@ const userData: User = {
 // Dados das mensagens
 const messageData: Message[] = [
   {
+    id: 1,
     avatar: "https://picsum.photos/200",
     name: "John Doe",
     role: "Moderador",
@@ -71,6 +72,7 @@ const messageData: Message[] = [
     message: "Lorem ipsum dolor sit amet",
   },
   {
+    id: 2,
     avatar: "https://picsum.photos/200",
     name: "John Doe",
     role: "Aluno",
@@ -78,6 +80,7 @@ const messageData: Message[] = [
     message: "Lorem ipsum dolor sit amet",
   },
   {
+    id: 3,
     avatar: "https://picsum.photos/200",
     name: "John Doe",
     role: "Professor",
@@ -114,7 +117,7 @@ const taskData: Task[] = [
     id: 1,
     title: "Terminar a lição de matemática",
     description: "Resolver os exercícios 1 a 10 do capítulo 3",
-    status: "todo",
+    status: "pendente",
   },
   {
     id: 2,

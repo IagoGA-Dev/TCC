@@ -4,15 +4,8 @@ import api from "../services/api";
 import Error from "../components/Error";
 import { useState } from "react";
 
-// Redux
-
-import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../redux/userSlice";
-import { RootState } from "../redux/store";
-
 function Login() {
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
 
   function createError({ message }: { message: string }) {
     setError(message);

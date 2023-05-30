@@ -1,3 +1,5 @@
+import { IconType } from "react-icons";
+
 // Dados do gráfico
 interface Graph {
   day: string;
@@ -6,9 +8,9 @@ interface Graph {
 
 // Dados dos cards
 interface Card {
-  Icon: any;
+  Icon: IconType;
   title: string;
-  children: any;
+  children: React.ReactNode;
   important?: boolean;
   route?: string;
 }
@@ -24,6 +26,7 @@ interface User {
 
 // Mensagens
 interface Message {
+  id: number;
   avatar: string;
   name: string;
   role: string;
@@ -44,7 +47,7 @@ interface Task {
   id: number;
   title: string;
   description: string;
-  status: "todo" | "em desenvolvimento" | "terminado";
+  status: "pendente" | "em desenvolvimento" | "terminado";
 }
 
 export type { Graph, Card, User, Message, Event, Task };

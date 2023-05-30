@@ -5,7 +5,7 @@ interface TaskState {
         id: number;
         title: string;
         description: string;
-        status: "todo" | "em desenvolvimento" | "terminado";
+        status: "pendente" | "em desenvolvimento" | "terminado";
     }[];
 }
 

@@ -1,5 +1,3 @@
-// TODO(ironicamente): Tranformar o modal em um componente reutilizável.
-// TODO: Model está bem quebrado. Vou desabilitar temporariamente até arrumar. Deve ser algo com o estado. O componente em si funciona bem.
 import { useState } from "react";
 import {
   BsCardChecklist,
@@ -32,7 +30,7 @@ function Tasks() {
   const [showModal, setShowModal] = useState(false);
   const [titleInput, setTitleInput] = useState("");
   const [descriptionInput, setDescriptionInput] = useState("");
-  const [statusInput, setStatusInput] = useState<Task["status"]>("todo");
+  const [statusInput, setStatusInput] = useState<Task["status"]>("pendente");
 
   // * Estado para a tarefa selecionada
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
@@ -64,7 +62,7 @@ function Tasks() {
     setShowModal(false);
     setTitleInput("");
     setDescriptionInput("");
-    setStatusInput("todo");
+    setStatusInput("pendente");
     setSelectedTask(null);
   };
 
@@ -95,7 +93,7 @@ function Tasks() {
       {/* Corpo */}
       <div className="flex flex-row flex-1 bg-white p-4 gap-4 overflow-x-auto">
         {/* Cria colunas para cada status */}
-        {["todo", "em desenvolvimento", "terminado"].map((status) => (
+        {["pendente", "em desenvolvimento", "terminado"].map((status) => (
           <div
             key={status}
             className="flex flex-col flex-1 bg-gray-100 rounded-sm p-4 gap-4 border-2"
@@ -110,6 +108,7 @@ function Tasks() {
                 .filter((task) => task.status === status)
                 .map((task) => (
                   <Card
+                    key={task.id}
                     Icon={BsCardChecklist}
                     date="Hoje"
                     title={task.title}
@@ -175,7 +174,7 @@ function Tasks() {
               value={statusInput}
               onChange={(e) => setStatusInput(e.target.value as Task["status"])}
             >
-              <option value="todo">Todo</option>
+              <option value="pendente">Pendente</option>
               <option value="em desenvolvimento">Em desenvolvimento</option>
               <option value="terminado">Terminado</option>
             </select>

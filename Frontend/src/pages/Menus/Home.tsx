@@ -16,13 +16,11 @@ import { userData } from "../../data";
 import DarkButton from "../../components/DarkButton";
 import MenuTitle from "../../components/MenuTitle";
 
-import Passport from "../../utils/passport";
+import Passport, { Usuario } from "../../utils/passport";
 
 // Redux
 
-import { useSelector, useDispatch } from "react-redux";
-import { setUser } from "../../redux/userSlice";
-import { RootState } from "../../redux/store";
+import { IconType } from "react-icons";
 
 // Gera os cards
 function CardList({ redirect }: HomeProps) {
@@ -31,6 +29,7 @@ function CardList({ redirect }: HomeProps) {
     <div className="flex flex-row gap-6">
       {cardData.map((card) => (
         <Card
+          key={card.title}
           Icon={card.Icon}
           title={card.title}
           important={card.important}
@@ -51,7 +50,7 @@ function CardList({ redirect }: HomeProps) {
 function NewButton() {
   const [popup, setPopup] = useState(false);
 
-  const menuButton = (name: string, Icon: any) => (
+  const menuButton = (name: string, Icon: IconType) => (
     <button className="flex flex-col items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md">
       <Icon className="w-6 h-6 text-gray-700" />
       <span className="text-gray-700">{name}</span>
@@ -87,8 +86,7 @@ function NewButton() {
   );
 }
 
-function Header({ user }: { user: any}) {
-  const name = useSelector((state: RootState) => state.user.name);
+function Header({ user }: { user: Usuario }) {
   return (
     <MenuTitle
       icon={
@@ -110,7 +108,7 @@ interface HomeProps {
 }
 
 function Home({ redirect }: HomeProps) {
-  const [user, setUser ] = useState(Passport.getUsuario());
+  const [user] = useState(Passport.getUsuario());
 
   return (
     <div>
