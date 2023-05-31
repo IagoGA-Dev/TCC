@@ -145,7 +145,7 @@ function Tasks() {
       ></Modal> */}
       
 
-      <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)}>
+      <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)} overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75">
         <div className="flex flex-col gap-4">
           <h2 className="text-lg font-bold text-gray-700">
             {selectedTask ? "Editar tarefa" : "Nova tarefa"}
