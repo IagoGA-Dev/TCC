@@ -12,7 +12,7 @@ module.exports = (server) => {
 
     // Aguardar mensagem
     socket.on("message", (message) => {
-      if (!message.text && !message.image && !message.file) return;
+      if (!message.text && !message.image && !message.file && !message.size) return;
 
       message.ID_Usuario = socket.user.id;
       message.Data = new Date();
@@ -25,15 +25,52 @@ module.exports = (server) => {
       eventEmitter.emit("save-message", message);
       socket.broadcast.emit("message", message);
     });
+
+    // Enviar mensagens antigas
+    socket.on("get-messages", async () => {
+      var messages = []
+      console.log("get-messages");
+      const { Mensagem } = require("../models");
+      await Mensagem.findAll({
+        where: {
+          ID_Grupo: 1
+        },
+        order: [
+          ['Data', 'ASC']
+        ]
+      }).then((result) => {
+        console.log("get-messages result");
+        result.forEach((message) => {
+          messages.push({
+            text: message.Texto,
+            image: message.Imagem,
+            file: message.Arquivo,
+            size: message.Tamanho
+          });
+        });
+      });
+
+      for (const message of messages) {
+        console.log(message);
+      }
+
+      socket.emit("get-messages", messages);
+      
+      console.log("get-messages finalizado");
+
+    });
   });
 
   // Autenticação
   chat.use((socket, next) => {
+    const jwt = require("jsonwebtoken");
     const { token } = socket.handshake.auth;
     if (!token) return next(new Error("Acesso negado. Token não fornecido."));
 
-    const { verifyToken, decryptToken } = require("../middleware/auth");
-    if (!verifyToken(token)) return next(new Error("Acesso negado. Token inválido."));
+    const { decryptToken } = require("../middleware/auth");
+
+    if(jwt.decode(token) === null) return next(new Error("Acesso negado. Token inválido."));
+    if(jwt.decode(token).exp < Date.now() / 1000) return next(new Error("Acesso negado. Token expirado."));
 
     const user = decryptToken(token);
     socket.user = user;

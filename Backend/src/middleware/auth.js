@@ -14,7 +14,12 @@ const createRefreshToken = (user) => jwt.sign({
 }, config.refreshTokenSecret, { expiresIn: config.refreshTokenLife });
   
 
-const verifyToken = (token) => jwt.verify(token, config.secret);
+const verifyToken = (token) => {
+  if(jwt.decode(token) === null) return new Error("Token inválido.");
+  if(jwt.decode(token).exp < Date.now() / 1000) return new Error("Token expirado.");
+
+  return decryptToken(token);
+}
 const verifyRefreshToken = (token) => jwt.verify(token, config.refreshTokenSecret);
 
 const decryptToken = (token) => jwt.decode(token);
