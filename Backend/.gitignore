@@ -3,3 +3,4 @@ coverage/
 .idea/
 src/log.txt
 log.txt
+.yarn-error.log
