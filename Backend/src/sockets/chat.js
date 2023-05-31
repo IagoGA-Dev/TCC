@@ -22,6 +22,8 @@ module.exports = (server) => {
       message.Arquivo = message.file;
       message.Tamanho = message.size;
 
+      // TODO: Só adicionando um lembrete de onde ficará a verificação pela LLM para filtragem de mensagens
+
       eventEmitter.emit("save-message", message);
       socket.broadcast.emit("message", message);
     });
