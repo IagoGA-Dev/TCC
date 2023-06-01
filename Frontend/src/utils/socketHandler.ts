@@ -46,7 +46,13 @@ class chatSocketHandler {
   }
 
   public onMessage(callback: (message: message) => void) {
+    console.log("Atribuindo novo callback!");
     this.socket?.on('receive-message', callback);
+  }
+
+  public offMessage(callback: (message: any) => void) {
+    console.log("Removendo callback!");
+    if (this.socket) { this.socket.off("message", callback); }
   }
 
   public getMessages(callback: (messages: message[]) => void) {
@@ -74,7 +80,7 @@ class chatSocketHandler {
     }
 
     this.token = response.data.token;
-    this.refreshToken = response.data.refreshToken;
+    // this.refreshToken = response.data.refreshToken;
     this.onRefreshToken(this.token);
   }
 }

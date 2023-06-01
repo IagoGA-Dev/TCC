@@ -27,8 +27,9 @@ module.exports = (server) => {
       console.log(`Mensagem recebida de ${socket.user.id} - ${new Date().toLocaleString('pt-BR')}`);
       console.log(message)
 
-      if (!message.Mensagem && !message.Tipo && !message.ID_Usuario && !message.ID_Grupo) return;
+      if (!message.ID && !message.Mensagem && !message.Tipo && !message.ID_Usuario && !message.ID_Grupo) return;
 
+      message.ID = message.ID;
       message.ID_Usuario = socket.user.id;
       message.Data = new Date().toLocaleString('pt-BR');
       message.ID_Grupo = message.ID_Grupo;

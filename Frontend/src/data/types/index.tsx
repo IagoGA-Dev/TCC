@@ -50,4 +50,13 @@ interface Task {
   status: "pendente" | "em desenvolvimento" | "terminado";
 }
 
-export type { Graph, Card, User, Message, Event, Task };
+interface message_type {
+  ID?: number;
+  ID_Usuario: number;
+  ID_Grupo: number;
+  Data: Date;
+  Mensagem: string
+  Tipo: "Texto" | "Imagem" | "Arquivo";
+}
+
+export type { Graph, Card, User, Message, Event, Task, message_type };
