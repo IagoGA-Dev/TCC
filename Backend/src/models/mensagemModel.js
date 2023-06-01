@@ -13,17 +13,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      Texto: {
+      Mensagem: {
         type: DataTypes.TEXT,
+        allowNull: false,
       },
-      Imagem: {
-        type: DataTypes.STRING(255),
-      },
-      Arquivo: {
-        type: DataTypes.STRING(255),
-      },
-      Tamanho: {
-        type: DataTypes.INTEGER,
+      Tipo: {
+        type: DataTypes.ENUM("Texto", "Imagem", "Arquivo"),
+        allowNull: false,
       },
       ID_Usuario: {
         type: DataTypes.INTEGER,

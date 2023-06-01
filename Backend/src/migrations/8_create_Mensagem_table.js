@@ -9,6 +9,18 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
+      Data: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      Mensagem: {
+        type: Sequelize.TEXT,
+        allowNull: false,
+      },
+      Tipo: {
+        type: Sequelize.ENUM("Texto", "Imagem", "Arquivo"),
+        allowNull: false,
+      },
       ID_Usuario: {
         type: Sequelize.INTEGER,
         allowNull: false,
@@ -17,10 +29,6 @@ module.exports = {
           key: "ID",
         },
         onDelete: "CASCADE",
-      },
-      Data: {
-        type: Sequelize.DATE,
-        allowNull: false,
       },
       ID_Grupo: {
         type: Sequelize.INTEGER,
@@ -31,19 +39,7 @@ module.exports = {
         },
         onDelete: "CASCADE",
       },
-      Texto: {
-        type: Sequelize.TEXT,
-      },
-      Imagem: {
-        type: Sequelize.STRING(255),
-      },
-      Arquivo: {
-        type: Sequelize.STRING(255),
-      },
-      Tamanho: {
-        type: Sequelize.INTEGER,
-      },
-    });
+    },);
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("Mensagem");

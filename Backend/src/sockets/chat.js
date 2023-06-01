@@ -13,19 +13,27 @@ module.exports = (server) => {
 
   // Conexão
   chat.on("connection", (socket) => {
+    console.log(`Nova conexão de ${socket.user.id} - ${new Date().toLocaleString('pt-BR')}`);
     socket.emit("connected", socket.user.id);
+
+    socket.on("join", (room) => {
+      socket.join(room);
+      console.log(`Usuário ${socket.user.id} entrou na sala ${room} - ${new Date().toLocaleString('pt-BR')}`);
+    });
 
     // Aguardar mensagem
     socket.on("message", (message) => {
-      if (!message.text && !message.image && !message.file && !message.size) return;
+
+      console.log(`Mensagem recebida de ${socket.user.id} - ${new Date().toLocaleString('pt-BR')}`);
+      console.log(message)
+
+      if (!message.Mensagem && !message.Tipo && !message.ID_Usuario && !message.ID_Grupo) return;
 
       message.ID_Usuario = socket.user.id;
-      message.Data = new Date();
-      message.ID_Grupo = socket.ID_Grupo;
-      message.Texto = message.text;
-      message.Imagem = message.image;
-      message.Arquivo = message.file;
-      message.Tamanho = message.size;
+      message.Data = new Date().toLocaleString('pt-BR');
+      message.ID_Grupo = message.ID_Grupo;
+      message.Mensagem = message.Mensagem;
+      message.Tipo = message.Tipo;
 
       // TODO: Só adicionando um lembrete de onde ficará a verificação pela LLM para filtragem de mensagens
 
@@ -36,23 +44,24 @@ module.exports = (server) => {
     // Enviar mensagens antigas
     socket.on("get-messages", async () => {
       var messages = []
-      console.log("get-messages");
+      console.log(`get-messages chamado por ${socket.user.id} - ${new Date().toLocaleString('pt-BR')}`);
       const { Mensagem } = require("../models");
       await Mensagem.findAll({
         where: {
-          ID_Grupo: socket.ID_Grupo
+          ID_Grupo: 2,
         },
         order: [
           ['Data', 'ASC']
         ]
       }).then((result) => {
-        console.log("get-messages result");
         result.forEach((message) => {
           messages.push({
-            text: message.Texto,
-            image: message.Imagem,
-            file: message.Arquivo,
-            size: message.Tamanho
+            ID: message.ID,
+            ID_Usuario: message.ID_Usuario,
+            ID_Grupo: message.ID_Grupo,
+            Data: message.Data,
+            Mensagem: message.Mensagem,
+            Tipo: message.Tipo
           });
         });
       });
@@ -87,7 +96,7 @@ module.exports = (server) => {
 
   // ID do grupo
   chat.use((socket, next) => {  
-    const { ID_Grupo } = socket.handshake.auth;
+    const { ID_Grupo } = socket.handshake.query;
     if (!ID_Grupo) return next(new Error("Acesso negado. ID_Grupo não fornecido."));
     socket.ID_Grupo = ID_Grupo;
     next();

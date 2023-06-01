@@ -75,7 +75,7 @@ function Groups({ redirect }: { redirect: (active: string) => void }) {
   // * Estado para a barra de busca
   const [searchTerm, setSearchTerm] = useState("");
   const [groups, setGroups] = useState<Group[]>([]);
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetchGroups().then((data) => {

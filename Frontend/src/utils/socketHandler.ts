@@ -1,11 +1,15 @@
 import * as io from 'socket.io-client';
 import api from '../services/api';
-
 interface message {
-  message: string;
-  type: "text" | "image" | "file";
-  id: number;
+  ID?: number;
+  ID_Usuario: number;
+  ID_Grupo: number;
+  Data: Date;
+  Mensagem: string
+  Tipo: "Texto" | "Imagem" | "Arquivo";
 }
+
+// TODO: onRefreshToken e onDisconnect podem ser alterados para callbacks mais genéricos.
 
 class chatSocketHandler {
   private socket: io.Socket | null;
@@ -13,46 +17,50 @@ class chatSocketHandler {
   private token: string;
   private refreshToken: string;
   private onRefreshToken: (newToken: string) => void;
-  private onDisconnect: () => void;
+  private onDisconnect: (err: string) => void;
 
-  constructor(id: number, token: string, refreshToken: string, onRefreshToken: (newToken: string) => void, onDisconnect: () => void) {
+  constructor(id: number, token: string, refreshToken: string, onRefreshToken: (newToken: string) => void, onDisconnect: (err: string) => void) {
     this.id = id;
     this.token = token;
     this.refreshToken = refreshToken;
-    this.socket = null;
     this.onRefreshToken = onRefreshToken;
     this.onDisconnect = onDisconnect;
-  }
 
-  public connect() {
-    this.socket = io.connect('http://localhost:3000/chat', {
-      auth: {
-        ID_Grupo: this.id,
-        token: this.token,
-      }
-    })
+    this.socket = io.connect('ws://localhost:3000/chat', {
+      query: { ID_Grupo: this.id },
+      auth: { token: this.token }
+    });
 
-    this.socket.on('connect_error', (err: any) => {
-      if (err.message === 'Acesso negado. Token expirado.') {
+    this.socket.on('connect', () => {
+      console.log(`Socket se conectou a: ${this.id}`);
+      this.socket?.emit('join', this.id);
+    });
+
+    this.socket.on("connect_error", (err: any) => {
+      if (err.message === "Acesso negado. Token expirado.") {
         this.refreshTokenHandler();
       } else {
-        this.disconnect();
+        this.disconnect("Erro ao conectar");
       }
-    }
-    );
+    });
   }
 
   public onMessage(callback: (message: message) => void) {
     this.socket?.on('receive-message', callback);
   }
 
+  public getMessages(callback: (messages: message[]) => void) {
+    this.socket?.on('get-messages', (messages: message[]) => { callback(messages); });
+    this.socket?.emit('get-messages');
+  }
+
   public sendMessage(message: message) {
     this.socket?.emit('message', message);
   }
 
-  public disconnect() {
+  public disconnect(error: string) {
     this.socket?.disconnect();
-    this.onDisconnect();
+    this.onDisconnect(`Socket desconectado: ${error}`);
   }
 
   private async refreshTokenHandler() {
@@ -61,7 +69,7 @@ class chatSocketHandler {
     });
 
     if (response.status !== 200) {
-      this.disconnect();
+      this.disconnect('Erro ao atualizar token'); 
       return;
     }
 

@@ -1,3 +1,5 @@
+// Essa classe é responsável por decodificar o token e retornar o usuário logado
+
 import jwtDecode from 'jwt-decode';
 
 class Passport {

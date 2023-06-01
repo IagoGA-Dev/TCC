@@ -1,36 +1,21 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { FiPaperclip, FiImage, FiFile } from "react-icons/fi";
 import { MdOutlineGroups } from "react-icons/md";
 import { AiOutlineArrowRight } from "react-icons/ai";
-import Modal from "react-modal";
 import MenuTitle from "../../components/MenuTitle";
 import Card from "../../components/Card";
+import chatSocketHandler from "../../utils/socketHandler";
 
-// Redux
-
-import { useSelector, useDispatch } from "react-redux";
-import { addMessage, deleteMessage } from "../../redux/chatSlice";
-import { RootState } from "../../redux/store";
-
-interface ChatMessageProps {
-  message: string;
-  type: "text" | "image" | "file";
-  id: number;
-  onDelete: (id: number) => void;
-  onReport: (id: number) => void;
+interface message_type {
+  ID?: number;
+  ID_Usuario: number;
+  ID_Grupo: number;
+  Data: Date;
+  Mensagem: string
+  Tipo: "Texto" | "Imagem" | "Arquivo";
 }
 
-
-function ChatMessage({
-  message,
-  type,
-}: ChatMessageProps) {
-  const [showModal, setShowModal] = useState(false);
-
-  const handleModalClose = () => {
-    setShowModal(false);
-  };
-
+function ChatMessage({ message, type }: {message: message_type["Mensagem"] , type: message_type["Tipo"]}) {
   return (
     <div className="flex items-start mb-4 relative">
       <img
@@ -38,19 +23,20 @@ function ChatMessage({
         alt="Avatar do usuário"
         className="w-10 h-10 rounded-full mr-4"
       />
-      <Card date={
-        new Date().toLocaleTimeString("en-US", {
+      <Card
+        date={new Date().toLocaleTimeString("en-US", {
           hour: "2-digit",
           minute: "2-digit",
-        })
-      } className="p-2 rounded-lg rounded-tl-none">
-        {type === "text" && <div className="text-lg">{message}</div>}
-        {type === "image" && (
+        })}
+        className="p-2 rounded-lg rounded-tl-none"
+      >
+        {type === "Texto" && <div className="text-lg">{message}</div>}
+        {type === "Imagem" && (
           <div className="cursor-pointer">
             <img src={message} alt="Imagem enviada pelo usuário" />
           </div>
         )}
-        {type === "file" && (
+        {type === "Arquivo" && (
           <div
             className="flex items-center cursor-pointer border border-gray-300 rounded-lg p-2"
             onClick={() => {
@@ -68,50 +54,26 @@ function ChatMessage({
             </div>
           </div>
         )}
-        {/* <ChatMessageActions id={id} onDelete={onDelete} onReport={onReport} /> */}
       </Card>
-      <Modal
-        isOpen={showModal}
-        onRequestClose={handleModalClose}
-        className="modal"
-        overlayClassName="overlay"
-      >
-        <img src={message} alt="Imagem em tamanho grande" />
-      </Modal>
     </div>
   );
 }
 
-interface ChatMessagesProps {
-  messages: { message: string; type: "text" | "image" | "file"; id: number }[];
-  onDelete: (id: number) => void;
-  onReport: (id: number) => void;
-}
-
-function ChatMessages({ messages, onDelete, onReport }: ChatMessagesProps) {
+function ChatMessages({messages}: {messages: message_type[]}){
   return (
     <div className="p-4 h-full overflow-y-auto" id="chat">
       {messages.map((message, index) => (
         <ChatMessage
           key={index}
-          message={message.message}
-          type={message.type}
-          id={message.id}
-          onDelete={onDelete}
-          onReport={onReport}
+          message={message.Mensagem}
+          type={message.Tipo}
         />
       ))}
     </div>
   );
 }
 
-interface ChatInputProps {
-  message: string;
-  setMessage: React.Dispatch<React.SetStateAction<string>>;
-  handleSendMessage: () => void;
-}
-
-function ChatInput({ message, setMessage, handleSendMessage }: ChatInputProps) {
+function ChatInput({ text, setMessage, handleSendMessage }: {text: string, setMessage: React.Dispatch<React.SetStateAction<string>>, handleSendMessage: () => void}) {
   return (
     <div>
       <div className="relative">
@@ -119,7 +81,7 @@ function ChatInput({ message, setMessage, handleSendMessage }: ChatInputProps) {
           type="text"
           placeholder="Digite sua mensagem..."
           className="w-full border border-gray-300 rounded-lg p-4 pl-10 text-lg bg-gray-100"
-          value={message}
+          value={text}
           onChange={(e) => setMessage(e.target.value)}
           onKeyUp={(e) => {
             if (e.key === "Enter") {
@@ -202,47 +164,65 @@ function GroupInfo() {
 }
 
 function Chat() {
-  interface message {
-    message: string;
-    type: "text" | "image" | "file";
-    id: number;
+  const [message, setMessage] = useState<string>("");
+  const [messages, setMessages] = useState<message_type[]>([]);
+
+  // Lidando com refresh e disconnect
+  const onRefresh = (newToken: string) => window.localStorage.setItem("x-access-token", newToken);
+  // const onDisconnect = window.location.href = "/login";
+  function onDisconnect(err: string) {
+    console.log(`Erro: ${err}`);
+    // window.location.href = "/login";
   }
 
-  const [message, setMessage] = useState<string>("");
-  const messages = useSelector((state: RootState) => state.chat.messages);
-  const dispatch = useDispatch();
-  
+  // Criando socket
+  const token = window.localStorage.getItem("x-access-token") || "";
+  const refreshToken = window.localStorage.getItem("x-refresh-token") || "";
+  const socket = new chatSocketHandler(1, token, refreshToken, onRefresh, onDisconnect);
+
+  useEffect(() => {
+    console.log("Deve ser chamado 1 vez");
+    // socket.connect();
+    socket.getMessages((messages: message_type[]) => {
+      setMessages(messages);
+    });
+    socket.onMessage((message: any) => addMessage(message as message_type));
+
+    // socket.sendMessage({
+    //   ID_Usuario: 1,
+    //   ID_Grupo: 1,
+    //   Data: new Date(),
+    //   Mensagem: "Olá, mundo!",
+    //   Tipo: "Texto",
+
+    // })
+
+    }, []);
+
+  // Adiciona uma mensagem ao chat
+  const addMessage = (message: message_type) => {
+    socket.sendMessage(message);
+    setMessages((messages) => [...messages, message]);
+  };
+
   // Lida com o envio de mensagens
   const handleSendMessage = () => {
     if (message.trim() !== "") {
-      const newMessage: message = {
-        message,
-        type: "text",
-        id: Math.random(), // ! REMOVER NA CONEXÃO COM O BACKEND!!!
+      const newMessage: message_type = {
+        ID_Usuario: 1,
+        ID_Grupo: 1,
+        Data: new Date(),
+        Mensagem: message,
+        Tipo: "Texto",
       };
-      dispatch(addMessage(newMessage));
+      addMessage(newMessage);
       setMessage("");
 
-
-      // ! Deve ter alguma forma de solucionar isso sem usar setTimeout
       setTimeout(() => {
         const chat = document.getElementById("chat");
-        if (chat) {
-          chat.scrollTop = chat.scrollHeight;
-        }
+        if (chat) { chat.scrollTop = chat.scrollHeight; }
       }, 1);
-    
     }
-  };
-
-  // Lida com a exclusão de mensagens
-  const handleDeleteMessage = (id: number) => {
-    dispatch(deleteMessage(id));
-  };
-
-  // Lida com o report de mensagens
-  const handleReportMessage = (id: number) => {
-    console.log(`Mensagem ${id} reportada!`);
   };
 
   return (
@@ -259,15 +239,13 @@ function Chat() {
           <div className="flex flex-col flex-grow overflow-y-auto">
             <ChatMessages
               messages={messages}
-              onDelete={handleDeleteMessage}
-              onReport={handleReportMessage}
             />
           </div>
 
           {/* Input */}
           <div className="w-full p-5">
             <ChatInput
-              message={message}
+              text={message}
               setMessage={setMessage}
               handleSendMessage={handleSendMessage}
             />
