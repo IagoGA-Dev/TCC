@@ -3,7 +3,12 @@ const events = require("events");
 const eventEmitter = new events.EventEmitter();
 
 module.exports = (server) => {
-  const io = require("socket.io")(server);
+  const io = require("socket.io")(server, {
+    cors: {
+      origin: "*",
+      methods: ["GET", "POST"],
+    },
+  });
   const chat = io.of("/chat");
 
   // Conexão
@@ -16,7 +21,7 @@ module.exports = (server) => {
 
       message.ID_Usuario = socket.user.id;
       message.Data = new Date();
-      message.ID_Grupo = 1;
+      message.ID_Grupo = socket.ID_Grupo;
       message.Texto = message.text;
       message.Imagem = message.image;
       message.Arquivo = message.file;
@@ -25,7 +30,7 @@ module.exports = (server) => {
       // TODO: Só adicionando um lembrete de onde ficará a verificação pela LLM para filtragem de mensagens
 
       eventEmitter.emit("save-message", message);
-      socket.broadcast.emit("message", message);
+      socket.broadcast.emit("receive-message", message);
     });
 
     // Enviar mensagens antigas
@@ -35,7 +40,7 @@ module.exports = (server) => {
       const { Mensagem } = require("../models");
       await Mensagem.findAll({
         where: {
-          ID_Grupo: 1
+          ID_Grupo: socket.ID_Grupo
         },
         order: [
           ['Data', 'ASC']
@@ -78,6 +83,14 @@ module.exports = (server) => {
     socket.user = user;
     next();
 
+  });
+
+  // ID do grupo
+  chat.use((socket, next) => {  
+    const { ID_Grupo } = socket.handshake.auth;
+    if (!ID_Grupo) return next(new Error("Acesso negado. ID_Grupo não fornecido."));
+    socket.ID_Grupo = ID_Grupo;
+    next();
   });
 
   // Eventos
