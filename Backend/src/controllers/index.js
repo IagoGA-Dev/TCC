@@ -313,7 +313,7 @@ class UsuarioController extends CrudController {
   }
 
   async refresh(req, res) {
-    const { createToken } = require("../middleware/auth");
+    const { createToken, createRefreshToken } = require("../middleware/auth");
     const config = require("../config/jwt.json");
     const jwt = require("jsonwebtoken");
     const { refreshToken } = req.body;
@@ -333,11 +333,25 @@ class UsuarioController extends CrudController {
           message: "Token inválido",
         });
       } else {
-        const token = createToken(decoded);
-        res.status(200).send({
-          code: 200,
-          message: "Token atualizado com sucesso",
-          token: token,
+        // const token = createToken(decoded);
+
+        this.model.findByPk(decoded.id).then((data) => {
+          if (data) {
+            const token = createToken(data);
+            const refreshToken = createRefreshToken(data);
+            res.status(200).send({
+              code: 200,
+              message: "Token atualizado com sucesso",
+              token: token,
+              refreshToken: refreshToken,
+            });
+          }
+          else {
+            res.status(404).send({
+              code: 3,
+              message: "Objeto da requisição não encontrado",
+            });
+          }
         });
       }
     }
