@@ -24,8 +24,8 @@ module.exports = (server) => {
     // Aguardar mensagem
     socket.on("message", (message) => {
 
-      console.log(`Mensagem recebida de ${socket.user.id} - ${new Date().toLocaleString('pt-BR')}`);
-      console.log(message)
+      // console.log(`Mensagem recebida de ${socket.user.id} - ${new Date().toLocaleString('pt-BR')}`);
+      // console.log(message)
 
       if (!message.ID && !message.Mensagem && !message.Tipo && !message.ID_Usuario && !message.ID_Grupo) return;
 
@@ -38,6 +38,15 @@ module.exports = (server) => {
 
       // TODO: Só adicionando um lembrete de onde ficará a verificação pela LLM para filtragem de mensagens
 
+      // Simulando LLM
+      if(message.Mensagem.includes("Teste")) {
+        message.Mensagem = "Mensagem bloqueada pela LLM";
+        message.Tipo = "Texto";
+        // Exemplo de bloqueio
+        // eventEmitter.emit("message-blocked", "Motivo do bloqueio");
+        // socket.emit("message-blocked", "Motivo do bloqueio");
+      }
+
       eventEmitter.emit("save-message", message);
       socket.broadcast.emit("receive-message", message);
     });
@@ -49,7 +58,7 @@ module.exports = (server) => {
       const { Mensagem } = require("../models");
       await Mensagem.findAll({
         where: {
-          ID_Grupo: 2,
+          ID_Grupo: socket.ID_Grupo,
         },
         order: [
           ['Data', 'ASC']
@@ -67,13 +76,13 @@ module.exports = (server) => {
         });
       });
 
-      for (const message of messages) {
-        console.log(message);
-      }
+      // for (const message of messages) {
+      //   console.log(message);
+      // }
 
       socket.emit("get-messages", messages);
       
-      console.log("get-messages finalizado");
+      // console.log("get-messages finalizado");
 
     });
   });

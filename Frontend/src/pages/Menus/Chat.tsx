@@ -8,6 +8,10 @@ import ChatMessage from "../../components/Chat/ChatMessage";
 import ChatInput from "../../components/Chat/ChatInput";
 import { message_type } from "../../data/types";
 
+// Chat redux
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
+
 function ChatMessages({messages}: {messages: message_type[]}){
   return (
     <div className="p-4 h-full overflow-y-auto" id="chat">
@@ -42,6 +46,8 @@ const handleOnMessage = (message: message_type, messages: message_type[], setMes
 }
 
 function Chat() {
+  const ID_Grupo = useSelector((state: RootState) => state.chat.group_ID);
+
   const [message, setMessage] = useState<string>("");
   const [messages, setMessages] = useState<message_type[]>([]);
 
@@ -50,7 +56,7 @@ function Chat() {
   const socket = useMemo(() => {
     const token = window.localStorage.getItem("x-access-token") || "";
     const refreshToken = window.localStorage.getItem("x-refresh-token") || "";
-    return new chatSocketHandler(1, token, refreshToken, onRefresh, onDisconnect);
+    return new chatSocketHandler(ID_Grupo, token, refreshToken, onRefresh, onDisconnect);
   }, []);
 
   useEffect(() => {
@@ -88,7 +94,7 @@ function Chat() {
       const newMessage: message_type = {
         ID: Math.floor(Math.random() * 1000000),
         ID_Usuario: 1,
-        ID_Grupo: 2,
+        ID_Grupo: ID_Grupo,
         Data: new Date(),
         Mensagem: message,
         Tipo: "Texto",

@@ -10,6 +10,11 @@ import api from "../../services/api";
 
 import Modal from "react-modal";
 
+// Redux de chat
+import { useSelector, useDispatch } from "react-redux";
+import { changeGroupID } from "../../redux/chatSlice";
+import { RootState } from "../../redux/store";
+
 interface Group {
   ID: number;
   Nome: string;
@@ -45,6 +50,14 @@ function GroupCard({
   createdAt,
   redirect,
 }: GroupCardProps) {
+
+  const dispatch = useDispatch();
+
+  // * Função que gerencia o redirecionamento para a página de chat
+  function handleClick(Group_ID: number, dispatch: any) {
+    dispatch(changeGroupID(Group_ID));
+  }
+
   return (
     <Card
       title={`#${addZeros(ID)}`}
@@ -52,6 +65,7 @@ function GroupCard({
       date={""}
       redirect={redirect}
       route={"chat"}
+      onClick={() => handleClick(ID, dispatch)}
     >
       <div className="flex flex-col items-center">
         <img src={Imagem} alt={Nome} className="w-32 h-32 rounded-full mb-4" />

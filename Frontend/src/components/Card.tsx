@@ -14,6 +14,7 @@ interface CardProps {
   date?: string;
   className?: string;
   applyDefaultClassNames?: boolean;
+  onClick?: () => void;
 }
 
 // * Componente principal
@@ -27,6 +28,7 @@ function Card({
   date,
   className,
   applyDefaultClassNames = true,
+  onClick,
 }: CardProps) {
 
   return (
@@ -39,7 +41,7 @@ function Card({
         ${className ? className : ""}
         ${important ? `relative` : ""}
       `}
-      onClick={() => (redirect && route) && redirect(route)}
+      onClick={() => (onClick && onClick()) || (redirect && route) && redirect(route)}
     >
       {important && (
         <div className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-500"></div>
