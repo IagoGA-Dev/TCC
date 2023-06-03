@@ -23,6 +23,7 @@ interface Group {
   Imagem: string;
   Membros: number;
   createdAt: Date;
+  Privado: boolean;
 }
 
 function addZeros(number: number) {
@@ -31,10 +32,13 @@ function addZeros(number: number) {
 }
 
 async function fetchGroups() {
-  // ! Existem alguns parametros faltando, como Descrição e Imagem.
   const response = await api.get("/grupo/");
-  const data = await response.data;
+  let data = await response.data;
+  // Remove grupos privados
+  data = data.filter((group: Group) => !group.Privado);
   return data;
+  // console.log(data);
+  // return data;
 }
 
 interface GroupCardProps extends Group {

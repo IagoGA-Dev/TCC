@@ -16,7 +16,7 @@ module.exports = {
           ID_Criador: 1,
           ID_Instituicao: 1,
           ID_Assistente: null,
-          Privado: 0,
+          Privado: 1,
           createdAt: new Date(),
           updatedAt: new Date()
         },
@@ -58,7 +58,7 @@ module.exports = {
           ID_Criador: 1,
           ID_Instituicao: 1,
           ID_Assistente: null,
-          Privado: 1,
+          Privado: 0,
           createdAt: new Date(),
           updatedAt: new Date()
         },
