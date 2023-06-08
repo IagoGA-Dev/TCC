@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   BsCardChecklist,
   BsCheck,
@@ -18,8 +18,28 @@ import Modal from "react-modal";
 // Redux
 
 import { useSelector, useDispatch } from "react-redux";
-import { addTask, editTask } from "../../redux/taskSlice";
+import { addTask, editTask, deleteTask, setInitialTasks } from "../../redux/taskSlice";
 import { RootState } from "../../redux/store";
+import api from "../../services/api";
+
+// Obtem tarefas a partir do backend
+
+interface TaskResponse {
+  ID: number;
+  ID_Usuario: number;
+  Titulo: string;
+  Descricao: string;
+  Status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+async function fetchTasks() {
+  const response = await api.get("/tarefa/");
+  const data = await response.data as TaskResponse[];
+  return data;
+}
+
 
 function Tasks() {
   // * Estado para as tarefas
@@ -75,6 +95,22 @@ function Tasks() {
     setStatusInput(task.status);
   };
 
+  // * Função para excluir uma tarefa
+  const handleDelete = (task: Task) => {
+    dispatch(deleteTask(task.id));
+    setSelectedTask(null);
+  }
+
+  useMemo(async () => {
+    // * Obter tarefas do backend
+    const tasks = await fetchTasks();
+    // * Adicionar tarefas ao estado
+    dispatch(setInitialTasks(tasks));
+  }, [
+    dispatch,
+  ]);
+
+
   // * Renderizar o componente da tarefa
   return (
     <div className="flex flex-col h-screen">
@@ -104,7 +140,7 @@ function Tasks() {
             <hr className="border-gray-700" />
             <div className="flex flex-col gap-4">
               {/* Renderiza as tarefas de acordo com o status */}
-              {tasks
+              {tasks && tasks
                 .filter((task) => task.status === status)
                 .map((task) => (
                   <Card
@@ -122,11 +158,11 @@ function Tasks() {
                         <span className="text-gray-700">Editar</span>
                       </button>
                       <button
-                        className="flex items-center gap-2 bg-gray-200 px-4 py-2 rounded-md"
-                        onClick={() => selectTask(task)}
+                        className="flex items-center gap-2 bg-red-500 px-4 py-2 rounded-md"
+                        onClick={() => handleDelete(task)}
                       >
-                        <BsTrash className="w-6 h-6 text-gray-700" />
-                        <span className="text-gray-700">Excluir</span>
+                        <BsTrash className="w-6 h-6 text-white" />
+                        <span className="text-white font-semibold">Excluir</span>
                       </button>
                     </div>
                   </Card>
@@ -134,16 +170,7 @@ function Tasks() {
             </div>
           </div>
         ))}
-      </div>
-
-      {/* Modal */}
-      {/* <Modal
-        isOpen={showModal}
-        onRequestClose={handleModalClose}
-        className="modal"
-        overlayClassName="overlay"
-      ></Modal> */}
-      
+      </div>      
 
       <Modal isOpen={showModal} onRequestClose={() => setShowModal(false)} overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75">
         <div className="flex flex-col gap-4">

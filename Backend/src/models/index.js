@@ -51,6 +51,7 @@ db.Banido = require("./banidoModel.js")(sequelize, DataTypes);
 db.Grupo = require("./grupoModel.js")(sequelize, DataTypes);
 db.UsuarioEspecial = require("./usuarioEspecialModel.js")(sequelize, DataTypes);
 db.UsuarioGrupo = require("./usuarioGrupoModel.js")(sequelize, DataTypes);
+db.Tarefa = require("./tarefaModel.js")(sequelize, DataTypes);
 
 db.sequelize.sync({ force: false }).then(() => {
   console.log("Tabelas sincronizadas");
