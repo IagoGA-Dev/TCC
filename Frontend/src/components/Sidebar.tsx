@@ -69,7 +69,7 @@ function Sidebar({ active, setActive }: SidebarProps) {
   }
 
   return (
-    <div className="relative flex flex-col w-16 bg-white py-4 shadow-lg items-center justify-between">
+    <div className="relative flex flex-col w-[64px] min-w-[64px] max-w-[64px] bg-white py-4 shadow-lg items-center justify-between">
       {/* Avatar */}
       <div className="flex flex-col items-center space-y-2">
         <Avatar src={userData.avatar} online={userData.online} />
