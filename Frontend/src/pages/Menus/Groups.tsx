@@ -12,8 +12,10 @@ import Modal from "react-modal";
 
 // Redux de chat
 import { useSelector, useDispatch } from "react-redux";
-import { changeGroupID } from "../../redux/chatSlice";
+import { changeGroup, changeGroupID } from "../../redux/chatSlice";
 import { RootState } from "../../redux/store";
+
+// Usuraio
 
 interface Group {
   ID: number;
@@ -54,12 +56,34 @@ function GroupCard({
   createdAt,
   redirect,
 }: GroupCardProps) {
-
   const dispatch = useDispatch();
 
-  // * Função que gerencia o redirecionamento para a página de chat
-  function handleClick(Group_ID: number, dispatch: any) {
-    dispatch(changeGroupID(Group_ID));
+  interface handleClickProps {
+    Group_ID: number;
+    name: string;
+    description: string;
+    image: string;
+    members: number;
+    createdAt: Date;
+    dispatch: any;
+  }
+  
+  function handleClick({
+    Group_ID,
+    name,
+    description,
+    image,
+    members,
+    createdAt,
+    dispatch,
+  }: handleClickProps) {
+    console.log("Group_ID: ", Group_ID);
+    console.log("name: ", name);
+    console.log("description: ", description);
+    console.log("image: ", image);
+    console.log("members: ", members);
+    console.log("createdAt: ", createdAt);
+    dispatch(changeGroup({ ID: Group_ID, name, description, image, members, createdAt }));
   }
 
   return (
@@ -69,10 +93,10 @@ function GroupCard({
       date={""}
       redirect={redirect}
       route={"chat"}
-      onClick={() => handleClick(ID, dispatch)}
+      onClick={() => handleClick({ Group_ID: ID, name: Nome, description: Descricao, image: Imagem, members: Membros, createdAt, dispatch })}
     >
       <div className="flex flex-col items-center">
-        <img src={Imagem} alt={Nome} className="w-32 h-32 rounded-full mb-4" />
+        <img src={Imagem} alt={Nome} className="w-32 h-32 rounded-full mb-4 object-cover" />
         <div className="text-xl font-bold mb-2">{Nome}</div>
         <div className="text-sm text-center mb-2">{Descricao}</div>
         <div className="text-xs text-gray-500 mb-1">Membros: {Membros}</div>
@@ -153,10 +177,60 @@ function Groups({ redirect }: { redirect: (active: string) => void }) {
         <div className="bg-white rounded-md w-96 p-4">
           <div className="text-xl font-bold mb-2 text-center">Novo Grupo</div>
           <hr />
-          <form className="flex flex-col gap-4 mt-3">
+          <form
+            className="flex flex-col gap-4 mt-3"
+            onSubmit={(e) => {
+
+              interface Group {
+                Nome: string;
+                Descricao: string;
+                Categoria: string;
+                Privado: boolean;
+                Imagem: string;
+              }
+
+              e.preventDefault();
+              const form = e.target as HTMLFormElement;
+              const nome = form.elements.namedItem("nome") as HTMLInputElement;
+              const descricao = form.elements.namedItem("descricao") as HTMLInputElement;
+              const categoria = form.elements.namedItem("categoria") as HTMLInputElement;
+              const imagem = form.elements.namedItem("imagem") as HTMLInputElement;
+              const privado = form.elements.namedItem("privado") as HTMLInputElement;
+
+              console.log("====================================");
+              console.log(`
+                Nome: ${nome.value}
+                Descricao: ${descricao.value}
+                Categoria: ${categoria.value}
+                Privado: ${privado.value}
+                Imagem: ${imagem.value}
+              `);
+              console.log("====================================");
+
+              api.post("/grupo/", {
+                ID_Criador: 4,
+                ID_Instituicao: 1,
+                Nome: nome.value,
+                Descricao: descricao.value,
+                Categoria: categoria.value,
+                Privado: privado.value ? "false" : "true",
+                Imagem: imagem.value,
+              }).then((response) => {
+                // alert("Grupo criado com sucesso!");
+                setShowModal(false);
+                fetchGroups().then((data) => {
+                  setGroups(data);
+                });
+              }).catch((error) => {
+                alert("Erro ao criar grupo!");
+              });
+            }}
+          >
             <label className="flex flex-col">
               <span className="text-sm text-gray-500 mb-2">Nome do Grupo</span>
               <input
+                name="nome"
+                id="nome"
                 type="text"
                 className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -166,6 +240,8 @@ function Groups({ redirect }: { redirect: (active: string) => void }) {
                 Descrição do Grupo
               </span>
               <input
+                name="descricao"
+                id="descricao"
                 type="text"
                 className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -173,50 +249,60 @@ function Groups({ redirect }: { redirect: (active: string) => void }) {
             <label className="flex flex-col">
               <span className="text-sm text-gray-500 mb-2">Categoria</span>
               <select
+                name="categoria"
+                id="categoria"
                 className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 defaultValue="default"
               >
                 <option value="default" disabled>
                   Selecione uma categoria
                 </option>
-                <option value="1">Categoria 1</option>
-                <option value="2">Categoria 2</option>
-                <option value="3">Categoria 3</option>
+                <option value="Categoria 1">Categoria 1</option>
+                <option value="Categoria 2">Categoria 2</option>
+                <option value="Categoria 3">Categoria 3</option>
               </select>
             </label>
-            {/* <label className="flex flex-col">
-              <span className="text-sm text-gray-500 mb-2">Imagem</span>
-              <input
-                type="file"
-                className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-            </label> */}
             <label className="flex flex-col">
               {/* Temporáriamente até eu descobrir como vou fazer o upload da imagem */}
               {/* O problema é abrir a porta para alguma vulnerabilidade */}
               <span className="text-sm text-gray-500 mb-2">Imagem (URL)</span>
               <input
+                name="imagem"
+                id="imagem"
                 type="text"
                 className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </label>
+
+              <div className="flex items-center gap-2">
+                <input
+                  name="privado"
+                  id="privado"
+                  type="checkbox"
+                  className="border rounded-md px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-500 mb-2">Privado</span>
+              </div>
+            
+            <div className="flex justify-start gap-4 mt-6 font-medium font-montserrat">
+              <div className="flex-1">
+                <DarkButton
+                  icon={<></>}
+                  text="Criar"
+                  type="submit"
+                  className="w-full justify-center"
+                />
+              </div>
+              <div className="flex-1">
+                <DarkButton
+                  icon={<></>}
+                  text="Cancelar"
+                  onClick={() => setShowModal(false)}
+                  className="w-full justify-center"
+                />
+              </div>
+            </div>
           </form>
-          <div className="flex justify-start gap-4 mt-6 font-medium font-montserrat">
-            <div className="flex-1">
-              <DarkButton icon={<></>} text="Criar"
-                onClick={() => setShowModal(false)}
-                className="w-full justify-center"
-              />
-            </div>
-            <div className="flex-1">
-              <DarkButton
-                icon={<></>}
-                text="Cancelar"
-                onClick={() => setShowModal(false)}
-                className="w-full justify-center"
-              />
-            </div>
-          </div>
         </div>
       </Modal>
     </div>

@@ -25,6 +25,8 @@ module.exports = {
       },
       Membros: {
         type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0,
       },
       ID_Criador: {
         type: Sequelize.INTEGER,
@@ -43,14 +45,14 @@ module.exports = {
         allowNull: false,
       },
       createdAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
         allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       },
       updatedAt: {
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.NOW,
         allowNull: false,
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
       }
     });
   },

@@ -55,14 +55,17 @@ function Calendar() {
   return (
     <div className="flex flex-col h-screen">
       <MenuTitle icon={<BsCalendar />} title="Calendário">
-        <DarkButton
+        {/* <DarkButton
           icon={<BsPlusCircleDotted className="w-6 h-6 text-gray-700" />}
           text="Novo Evento"
-        />
+        /> */}
+        <>
+        </>
       </MenuTitle>
       <div className="flex flex-row flex-1">
         <div className="flex flex-col w-3/4 bg-white border-r">
-          <div className="flex flex-row items-center justify-between p-4 border-b">
+          {/* Cabeçalho do calendário */}
+          <div className="flex flex-row items-center justify-between p-4 border-b h-16">
             <button onClick={() => changeMonth(-1)}>
               <AiOutlineArrowLeft className="w-6 h-6 text-gray-700 hover:text-gray-600" />
             </button>
@@ -144,9 +147,16 @@ function Calendar() {
         {/* Lista de eventos pra data selecionada */}
         <div className="flex flex-col w-1/4 bg-gray-50">
           {/* Cabeçalho */}
-          <h3 className="text-lg font-semibold text-gray-700 p-4 border-b">
-            {selectedDate.toLocaleDateString()}
-          </h3>
+          <div className="flex flex-row items-center justify-between p-4 border-b h-16">
+            <h3 className="text-lg font-semibold text-gray-700">
+              {selectedDate.toLocaleDateString()}
+            </h3>
+              <DarkButton
+                className="hidden lg:inline-flex"
+                icon={<BsPlusCircleDotted className="w-6 h-6 p-0 m-0 text-gray-700" />}
+                text="Novo Evento"
+              />
+          </div>
           {/* Corpo */}
           <div className="flex flex-col gap-2 p-4 overflow-y-auto">
             {events.length > 0 ? (

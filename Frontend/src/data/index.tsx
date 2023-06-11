@@ -94,19 +94,19 @@ const eventData: Event[] = [
   {
     id: 1,
     title: "Prova de matemática",
-    date: new Date(2023, 4, 17),
+    date: new Date(2023, 5, 17),
     color: "red",
   },
   {
     id: 2,
     title: "Apresentação de inglês",
-    date: new Date(2023, 4, 18),
+    date: new Date(2023, 5, 18),
     color: "blue",
   },
   {
     id: 3,
     title: "Projeto de ciências",
-    date: new Date(2023, 4, 19),
+    date: new Date(2023, 5, 19),
     color: "yellow",
   },
 ];

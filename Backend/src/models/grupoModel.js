@@ -25,7 +25,6 @@ module.exports = (sequelize, DataTypes) => {
       Membros: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
-        allowNull: false,
       },
       ID_Criador: {
         type: DataTypes.INTEGER,
@@ -45,14 +44,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       createdAt: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: false,
+        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
       },
       updatedAt: {
         type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW,
-        allowNull: false,
-      }
+        defaultValue: sequelize.literal("CURRENT_TIMESTAMP"),
+      },
     },
     {
       tableName: "Grupo",
